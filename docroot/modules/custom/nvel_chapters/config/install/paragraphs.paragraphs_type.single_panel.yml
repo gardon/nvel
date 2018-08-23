@@ -1,6 +1,0 @@
-langcode: pt-br
-status: true
-dependencies: {  }
-id: single_panel
-label: 'Single Panel'
-behavior_plugins: {  }
