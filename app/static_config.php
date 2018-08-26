@@ -2,6 +2,6 @@
 
 function static_config() {
   return array(
-    'backend_url' => 'http://server.nvel.docksal'
+    'backend_url' => 'http://localhost'
   );
 }
