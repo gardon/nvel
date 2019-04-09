@@ -13,6 +13,11 @@ img.u-full-width {
 	margin: 0 auto;
 	width: auto;
 	max-width: 100%;
+  min-height: 80vh;
+  text-indent: -9999px;
+  background-image: url(../images/loading.svg);
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 @media (min-width: 550px) {
@@ -71,7 +76,7 @@ span.loading-icon {
 }
 
 .content {
-  min-height: 1200px; 
+  min-height: 1200px;
 }
 
 ul.navbar-list,
@@ -132,7 +137,7 @@ ul.social-links {
 
 .footer-container {
 	margin-bottom: 2em;
-}	
+}
 
 .footer-container ul.social-links {
 	position: static;
