@@ -13,7 +13,7 @@ img.u-full-width {
 	margin: 0 auto;
 	width: auto;
 	max-width: 100%;
-  min-height: 80vh;
+  min-height: 50vw;
   text-indent: -9999px;
   background-image: url(../images/loading.svg);
   background-repeat: no-repeat;
