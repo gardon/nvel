@@ -21,8 +21,8 @@ getChapters model =
     Http.send ChaptersLoad (Http.get url decodeChapters)
 
 getChapterContent : Model -> Chapter -> Cmd Msg
-getChapterContent model chapter = 
-  let 
+getChapterContent model chapter =
+  let
     url = model.backendConfig.backendURL ++ chapterContentEndpoint ++ "/" ++ chapter.nid ++ "?_format=json"
   in
     Http.send ChapterContentLoad (Http.get url chapterDecoder)
@@ -33,8 +33,8 @@ decodeChapterContent =
   Decode.list sectionDecoder
 
 chapterDecoder : Decode.Decoder Chapter
-chapterDecoder = 
-  decode Chapter 
+chapterDecoder =
+  decode Chapter
       |> required "title" Decode.string
       |> required "field_description" Decode.string
       |> required "nid" Decode.string
@@ -50,32 +50,64 @@ decodeChapters =
   Decode.dict chapterDecoder
 
 zoomImage : Model -> String -> Int -> Model
-zoomImage model chapter section = 
-  case model.chapters of 
-    Nothing -> 
+zoomImage model chapter section =
+  case model.chapters of
+    Nothing ->
       model
     Just chapters ->
       { model | chapters = Dict.update chapter (zoomImageSection section) chapters |> Just }
 
 zoomImageSection : Int -> Maybe Chapter -> Maybe Chapter
 zoomImageSection index chapter =
-  case chapter of 
+  case chapter of
     Nothing ->
       Nothing
     Just chapter ->
-    let 
+    let
       content = chapter.content
-      section = drop (index-1) content 
+      section = drop (index-1) content
       |> head
     in
-      case section of 
+      case section of
         Nothing ->
           Just chapter
         Just section ->
-          let newsection = 
+          let newsection =
             if section.zoomed == True then
               { section | zoomed = False }
             else
               { section | zoomed = True }
-          in 
+          in
+            { chapter | content = concat [ take (index-1) content, [ newsection ], drop index content ] } |> Just
+
+loadImage : Model -> String -> Int -> Model
+loadImage model chapter section =
+  case model.chapters of
+    Nothing ->
+      model
+    Just chapters ->
+      { model | chapters = Dict.update chapter (loadImageSection section) chapters |> Just }
+
+loadImageSection : Int -> Maybe Chapter -> Maybe Chapter
+loadImageSection index chapter =
+  case chapter of
+    Nothing ->
+      Nothing
+    Just chapter ->
+    let
+      content = chapter.content
+      section = drop (index-1) content
+      |> head
+    in
+      case section of
+        Nothing ->
+          Just chapter
+        Just section ->
+          let
+            image = section.image
+            newimage =
+              { image | load = True}
+            newsection =
+              { section | image = newimage }
+          in
             { chapter | content = concat [ take (index-1) content, [ newsection ], drop index content ] } |> Just

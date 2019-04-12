@@ -11,10 +11,10 @@ import Date
 
 getAuth : String -> Decode.Decoder a -> Request a
 getAuth url decoder =
-  let 
+  let
     authHeader = BasicAuth.buildAuthorizationHeader "" ""
-  in 
-    Http.request 
+  in
+    Http.request
       { method = "GET"
       , headers = [ authHeader ]
       , url = url
@@ -42,6 +42,7 @@ imageDecoder =
       |> optional "alt" Decode.string ""
       |> optional "title" Decode.string ""
       |> optional "derivatives" (Decode.list decodeDerivative) []
+      |> hardcoded False
 
 decodeDerivative : Decode.Decoder Image.Derivative
 decodeDerivative =
@@ -56,7 +57,7 @@ sectionDecoder =
 
 decodeSection : String -> Decode.Decoder Section
 decodeSection sectionType =
-  case sectionType of 
+  case sectionType of
       "full_width_single_panel" ->
           decodeFullWidthSingleImageSection
       "single_panel" ->
@@ -112,7 +113,7 @@ decodeTitlePanelSection features =
       |> hardcoded False
 
 decodeTitlePanelFeatures : Decode.Decoder TitlePanelFeatures
-decodeTitlePanelFeatures = 
+decodeTitlePanelFeatures =
   decode TitlePanelFeatures
       |> required "title" Decode.string
       |> required "author" Decode.string
@@ -134,12 +135,12 @@ decodeTextSection text =
       |> hardcoded False
 
 --markdownDecoder : Decode.Decoder (Html msg)
---markdownDecoder = 
+--markdownDecoder =
 --  Decode.string
 --      |> Decode.andThen Markdown.toHtml []
 
 decodeSiteInformation : Decode.Decoder SiteInformation
-decodeSiteInformation = 
+decodeSiteInformation =
    decode SiteInformation
       |> required "title" Decode.string
       |> required "description" Decode.string
@@ -147,4 +148,3 @@ decodeSiteInformation =
       |> optional "instagram_handle" Decode.string ""
       |> optional "deviantart_profile" Decode.string ""
       |> optional "about" Decode.string "# About"
-

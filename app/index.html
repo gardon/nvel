@@ -78,8 +78,10 @@
         }
       });
 
-      app.ports.facebookRender.subscribe(function() {
+      app.ports.pageChange.subscribe(function() {
+        // Refresh facebook
         window.setTimeout(FB.XFBML.parse, 500)
+        window.setTimeout(function() { lazyLoad(0) }, 500);
       });
 
       var scroll = window.pageYOffset || document.body.scrollTop;
@@ -103,8 +105,23 @@
           }
         }
         scroll = newScroll;
+        lazyLoad(scroll);
       };
-      
+
+      function lazyLoad(scroll) {
+        var images = document.querySelectorAll('.lazy-section.not-loaded');
+        for (i = 0; i < images.length; i++) {
+          image = images[i];
+          if (image.offsetTop < scroll + 1000) {
+            var ids = image.id.split("-");
+            app.ports.lazyLoad.send({chapter: ids[1], section: Number(ids[2])})
+          }
+        }
+      }
+
+      window.onload = function() {
+        window.setTimeout(function() { lazyLoad(scroll  ) }, 500);
+      }
 
       function hideNav() {
         app.ports.navBar.send(false);

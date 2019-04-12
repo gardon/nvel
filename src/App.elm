@@ -48,27 +48,28 @@ init location =
     menu = Menu.menu
     route = parseLocation location
     model = Model chapters siteInformation pageData backendConfig menu route lang True location
-  in 
+  in
     ( model, getSiteInformation model )
 
 
 port updatePageData : PageData -> Cmd msg
 port renderSocialMedia : String -> Cmd msg
 port navBar : (Bool -> msg) -> Sub msg
-port facebookRender : () -> Cmd msg
+port lazyLoad : ({ chapter: String, section: Int } -> msg) -> Sub msg
+port pageChange : () -> Cmd msg
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     ChaptersLoad (Ok chapters) ->
-      let 
+      let
         newmodel = { model | chapters = Just chapters }
         updatedModel = { newmodel | pageData = pageData newmodel }
-      in 
+      in
         ( updatedModel , updatePageData updatedModel.pageData)
 
     ChaptersLoad (Err error) ->
-      (model, Cmd.none)
+      (model, pageChange ())
 
     ChapterContentLoad (Ok chapter) ->
       (Chapters.Chapter.replaceChapter model chapter, Cmd.none)
@@ -98,15 +99,15 @@ update msg model =
           newmodel = { model | route = newRoute, location = location }
           updatedModel = { newmodel | pageData = pageData newmodel }
       in
-          ( updatedModel, Cmd.batch [ updatePageData updatedModel.pageData, facebookRender ()])
+          ( updatedModel, Cmd.batch [ updatePageData updatedModel.pageData, pageChange ()])
 
     Navbar action ->
       let
-        navbar = 
+        navbar =
           case action of
             Show -> True
             Hide -> False
-      in 
+      in
         ( { model | navbar = navbar }, Cmd.none)
 
     ToggleZoomedImage chapter section ->
@@ -115,14 +116,17 @@ update msg model =
     NoOp ->
       ( model, Cmd.none )
 
+    LoadImage chapter section ->
+      ( loadImage model chapter section, Cmd.none )
+
 -- VIEW
 
 
 view : Model -> Html Msg
 view model =
-  let 
+  let
     content = routeContent model
-  in 
+  in
     div [] content
 
 
@@ -132,7 +136,10 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  navBar toggleNavbar
+  Sub.batch
+  [ navBar toggleNavbar
+  , lazyLoad lazyImage
+  ]
 
 toggleNavbar : Bool -> Msg
 toggleNavbar flag =
@@ -141,6 +148,8 @@ toggleNavbar flag =
   else
     Navbar Hide
 
+lazyImage : { chapter: String, section: Int } -> Msg
+lazyImage record =
+  LoadImage record.chapter record.section
+
 -- HTTP
-
-

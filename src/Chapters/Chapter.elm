@@ -16,7 +16,7 @@ view model =
     case model of
         AssetLoading ->
             div []
-                [ h1 [] [ loading "Loading" ]    
+                [ h1 [] [ loading "Loading" ]
             ]
 
         AssetNotFound ->
@@ -29,15 +29,15 @@ view model =
 
 replaceChapter : Model -> Chapter -> Model
 replaceChapter model newchapter =
-    case model.chapters of 
+    case model.chapters of
         Nothing ->
             { model | chapters = Just (Dict.singleton newchapter.nid newchapter) }
 
         Just chapters ->
-            { model | chapters = Just (Dict.insert newchapter.nid newchapter chapters) } 
+            { model | chapters = Just (Dict.insert newchapter.nid newchapter chapters) }
 
 viewChapter : Chapter -> Html Msg
-viewChapter chapter = 
+viewChapter chapter =
     List.append [ h1 [ class "chapter-title hidden"] [ text chapter.title ] ] (viewChapterContent chapter.content)
     |> div []
 
@@ -47,50 +47,62 @@ viewChapterContent model =
 
 viewSection : Section -> Html Msg
 viewSection model =
-    case model.sectionType of 
+    case model.sectionType of
       SingleImage ->
-        let 
-            newclass = if model.zoomed then
-                "section-single-image zoomed"
-            else
-                "section-single-image"
+        let
+            classes =
+              [ ("section-single-image", True)
+              , ("lazy-section", True)
+              , ("zoomed", model.zoomed)
+              , ("not-loaded", not model.image.load )
+              ]
         in
-            skeletonRow [ class newclass, "section-" ++ model.chapter ++ "-" ++ (toString model.id) |> id] 
-                [ viewImage 
+            skeletonRow [ classList classes, "section-" ++ model.chapter ++ "-" ++ (toString model.id) |> id]
+                [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
                     , onClick (Msgs.ToggleZoomedImage model.chapter model.id)
-                    ] 
-                    model.image 
-                ]  
+                    ]
+                    model.image
+                ]
 
       FullWidthSingleImage ->
-        let 
-            newclass = if model.zoomed then
-                "section-full-width-image zoomed"
-            else
-                "section-full-width-image"
+        let
+          classes =
+            [ ("section-full-width-image", True)
+            , ("lazy-section", True)
+            , ("zoomed", model.zoomed)
+            , ("not-loaded", not model.image.load )
+            ]
         in
-            skeletonRowFullWidth [ class newclass, "section-" ++ model.chapter ++ "-" ++ (toString model.id) |> id ] 
-                [ viewImage 
+            skeletonRowFullWidth [ classList classes, "section-" ++ model.chapter ++ "-" ++ (toString model.id) |> id ]
+                [ viewImage
                     [ class "u-full-width"
-                    , sizes [ "100w" ] 
+                    , sizes [ "100w" ]
                     , onClick (Msgs.ToggleZoomedImage model.chapter model.id)
-                    ] 
-                    model.image 
+                    ]
+                    model.image
                 ]
 
       Spacer ->
         skeletonRowFullWidth [ class "section-spacer" ] []
 
       TitlePanel features ->
-        skeletonRow [ class "section-title" ] 
-        [ viewImage [] model.image
-        , h2 [ class "chapter-title" ] [ text features.title ]
-        , h3 [ class "author" ] [ text features.author ]
-        , Markdown.toHtmlWith markdownOptions [ class "extra" ] features.extra
-        , div [ class "copyright" ] [ text features.copyright ]
-        ]
+        let
+          classes =
+            [ ("section-title", True)
+            , ("lazy-section", True)
+            , ("not-loaded", not model.image.load )
+            ]
+          elementid = "section-" ++ model.chapter ++ "-" ++ (toString model.id)
+        in
+          skeletonRow [ classList classes, id elementid ]
+          [ viewImage [] model.image
+          , h2 [ class "chapter-title" ] [ text features.title ]
+          , h3 [ class "author" ] [ text features.author ]
+          , Markdown.toHtmlWith markdownOptions [ class "extra" ] features.extra
+          , div [ class "copyright" ] [ text features.copyright ]
+          ]
 
       Text text ->
         skeletonRow [ class "section-text" ]

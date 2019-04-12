@@ -26,11 +26,11 @@ viewHome model =
       [ loading (translate model.language Loading)]
 
     Just chapters ->
-      let 
+      let
           list = sortChapterList chapters
           lang = model.language
 
-          firstrow = 
+          firstrow =
             case List.head (List.reverse list) of
               Nothing ->
                 skeletonRow [] []
@@ -43,13 +43,13 @@ viewHome model =
                   Just first ->
                     if current == first then
                         skeletonRow [] [ viewChapterFeaturedCurrent lang current ]
-                    else 
+                    else
                         skeletonRow [] [ viewChapterFeaturedCurrent lang current, viewChapterFeaturedFirst lang first ]
 
 
-          secondrow = skeletonRow [ class "center chapters-button" ] 
+          secondrow = skeletonRow [ class "center chapters-button" ]
               [ translate lang ListAllChapters
-                  |> linkButtonBig "chapters" 
+                  |> linkButtonBig "chapters"
               ]
 
           thirdrow = skeletonRow []
@@ -59,8 +59,8 @@ viewHome model =
               ]
 
       in
-          [ div [] 
-              [ firstrow 
+          [ div []
+              [ firstrow
               , secondrow
               , thirdrow
               ]
@@ -71,33 +71,33 @@ facebookFeed model =
   let
     page = model.siteInformation.facebook_page
     title = model.siteInformation.title
-      
+
   in
     div (skeletonGridSize SixColumns)
-      [ div 
+      [ div
         [ class "fb-page"
         , dataAttr "href" ("https://www.facebook.com/" ++ page ++ "/")
-        , dataAttr "small-header" "false" 
-        , dataAttr "adapt-container-width" "true" 
-        , dataAttr "hide-cover" "false" 
+        , dataAttr "small-header" "false"
+        , dataAttr "adapt-container-width" "true"
+        , dataAttr "hide-cover" "false"
         , dataAttr "show-facepile" "false"
         , dataAttr "width" "300"
         ]
-        [ blockquote 
-          [ Html.Attributes.cite "https://www.facebook.com/abismos.oficial/" 
-          , class "fb-xfbml-parse-ignore" 
+        [ blockquote
+          [ Html.Attributes.cite "https://www.facebook.com/abismos.oficial/"
+          , class "fb-xfbml-parse-ignore"
           ]
           [ a [ href "https://www.facebook.com/abismos.oficial/" ] [ text title ] ]
         ]
       ]
-            
+
 viewChapterList : Model -> List (Html Msg)
-viewChapterList model = 
-  case model.chapters of 
-    Nothing -> 
+viewChapterList model =
+  case model.chapters of
+    Nothing ->
         [ loading "Loading chapters..." ]
 
-    Just chapters -> 
+    Just chapters ->
         let
           list = List.map viewChapterListItem (sortChapterList chapters)
           length = List.length list
@@ -107,18 +107,18 @@ viewChapterList model =
           secondcol = List.drop half list
             |> skeletonColumn SixColumns []
 
-        in 
+        in
           skeletonRow [] [ firstcol, secondcol ]
             |> List.singleton
-            
+
 
 sortChapterList : Dict String Chapter -> List Chapter
-sortChapterList chapters = 
+sortChapterList chapters =
   List.sortBy .index (Dict.values chapters)
 
 viewChapterFeatured : Language -> Phrase -> String -> Chapter -> Html Msg
-viewChapterFeatured lang caption_phrase featured_class chapter = 
-  let 
+viewChapterFeatured lang caption_phrase featured_class chapter =
+  let
       chapterPath = "/chapters/" ++ chapter.nid
       chapterNumber = "#" ++ (toString chapter.index) ++ " "
       caption = translate lang caption_phrase
@@ -126,8 +126,8 @@ viewChapterFeatured lang caption_phrase featured_class chapter =
   in
       div ([ class ("chapter-featured equal-heights " ++ featured_class), onLinkClick (ChangeLocation chapterPath)] ++ skeletonGridSize SixColumns)
         [ viewImage [] chapter.featured_image
-        , div [ class "image-overlay" ] 
-          [ h3 [] [ text caption ] 
+        , div [ class "image-overlay" ]
+          [ h3 [] [ text caption ]
           , h2 [] [ span [] [ text chapterNumber ], text chapter.title ]
         ]
         , div [ class "inner" ]
@@ -148,24 +148,24 @@ viewChapterFeaturedFirst lang chapter =
   viewChapterFeatured lang StartFromBeginning "first-chapter" chapter
 
 viewChapterFeaturedNext : Language -> Chapter -> Html Msg
-viewChapterFeaturedNext lang chapter = 
+viewChapterFeaturedNext lang chapter =
   viewChapterFeatured lang NextChapter "next-chapter offset-by-three" chapter
 
 linkButtonPrimary : String -> String -> Html Msg
-linkButtonPrimary path title = 
+linkButtonPrimary path title =
   linkButton [ class "button-primary" ] path title
 
 linkButton : List (Attribute Msg) -> String -> String -> Html Msg
-linkButton attr path title = 
+linkButton attr path title =
   a ([ href path, onLinkClick (ChangeLocation path), class "button" ] ++ attr) [ text title ]
 
-linkButtonBig : String -> String -> Html Msg 
-linkButtonBig path title = 
+linkButtonBig : String -> String -> Html Msg
+linkButtonBig path title =
   linkButton [ class "big" ] path title
 
 viewChapterListItem : Chapter -> Html Msg
 viewChapterListItem chapter =
-  let 
+  let
       chapterPath = "/chapters/" ++ chapter.nid
       chapterNumber = "#" ++ (toString chapter.index) ++ ": "
   in
@@ -182,16 +182,22 @@ viewImage attributes image =
   if (image == Image.emptyImage) then
     text ""
   else
-    img ( attributes ++ 
-      [ src image.uri
-      , width image.width
-      , height image.height
-      , alt image.alt
-      , title image.title
-      , srcset image.derivatives 
-      ]) []
+    let
+      newattributes =
+        if (image.load) then
+          attributes ++ [ src image.uri ]
+        else
+          attributes
+    in
+      img ( newattributes ++
+        [ width image.width
+        , height image.height
+        , alt image.alt
+        , title image.title
+        , srcset image.derivatives
+        ]) []
 
-viewMenu : Model -> List MenuItem -> Html Msg 
+viewMenu : Model -> List MenuItem -> Html Msg
 viewMenu model menu =
   nav [ class "navbar"] [
       ul [ class "navbar-list" ] (List.map (viewMenuItem model) menu)
@@ -202,13 +208,13 @@ viewMenuItem model item =
   let
     activeclass = if (model.route == item.route) then "active" else ""
   in
-    li [ class "navbar-item", class activeclass ] [ 
+    li [ class "navbar-item", class activeclass ] [
       a [ href item.path, onLinkClick (ChangeLocation item.path), class "navbar-link" ] [ text (translate model.language item.title) ]
     ]
 
 viewSocialLinks : Model -> Html Msg
 viewSocialLinks model =
-  ul [ class "social-links" ] 
+  ul [ class "social-links" ]
     [ if model.siteInformation.facebook_page == "" then text "" else li [ class "social-links-item facebook" ] [ viewFacebookPageLink model.siteInformation.facebook_page ]
     , if model.siteInformation.instagram_handle == "" then text "" else li [ class "social-links-item instagram" ] [ viewInstagramLink model.siteInformation.instagram_handle ]
     , if model.siteInformation.deviantart_profile == "" then text "" else li [ class "social-links-item deviantart" ] [ viewDeviantArtLink model.siteInformation.deviantart_profile ]
@@ -216,28 +222,28 @@ viewSocialLinks model =
 
 viewFacebookPageLink : String -> Html msg
 viewFacebookPageLink handle =
-  a [ href ("http://www.facebook.com/" ++ handle), class "social-link facebook external-link", target "_blank" ] 
+  a [ href ("http://www.facebook.com/" ++ handle), class "social-link facebook external-link", target "_blank" ]
     [ viewSocialIcon FacebookIcon
     , text "Facebook"
     ]
 
 viewInstagramLink : String -> Html msg
 viewInstagramLink handle =
-  a [ href ("http://instagram.com/" ++ handle), class "social-link instagram external-link", target "_blank" ] 
+  a [ href ("http://instagram.com/" ++ handle), class "social-link instagram external-link", target "_blank" ]
     [ viewSocialIcon InstagramIcon
-    , text "Instagram" 
+    , text "Instagram"
     ]
 
 viewDeviantArtLink : String -> Html msg
 viewDeviantArtLink handle =
-  a [ href ("http://" ++ handle ++ ".deviantart.com/"), class "social-link deviantart external-link", target "_blank" ] 
+  a [ href ("http://" ++ handle ++ ".deviantart.com/"), class "social-link deviantart external-link", target "_blank" ]
     [ viewSocialIcon DeviantArtIcon
-    , text "DeviantArt" 
+    , text "DeviantArt"
   ]
 
 viewSocialIcon : SocialIconType -> Html msg
 viewSocialIcon social =
-  let svgpath = 
+  let svgpath =
     case social of
       FacebookIcon ->
         "M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"
@@ -246,22 +252,22 @@ viewSocialIcon social =
       DeviantArtIcon ->
         "M20 4.364v-4.364h-4.364l-.435.439-2.179 4.124-.647.437h-7.375v6h4.103l.359.404-4.462 8.232v4.364h4.509l.435-.439 2.174-4.124.648-.437h7.234v-6h-3.938l-.359-.438z"
   in
-    svg 
-      [ xmlSpace "http://www.w3.org/2000/svg" 
-      , Svg.Attributes.width "18" 
-      , Svg.Attributes.height "18" 
+    svg
+      [ xmlSpace "http://www.w3.org/2000/svg"
+      , Svg.Attributes.width "18"
+      , Svg.Attributes.height "18"
       , viewBox "0 0 24 24"
       ]
-      [ path 
-        [ d svgpath ] 
-        [] 
+      [ path
+        [ d svgpath ]
+        []
       ]
 
 viewChapterNavbar : Model -> Chapter -> List (Html Msg)
 viewChapterNavbar model chapter =
   let
     lang = model.language
-    chapterNavigation = 
+    chapterNavigation =
       case model.chapters of
         Nothing ->
           ul [] []
@@ -271,7 +277,7 @@ viewChapterNavbar model chapter =
             index = chapter.index
             previous = List.take (index - 1) list
             next = List.drop index list
-            previous_crop = 
+            previous_crop =
               if (List.length previous) > 1 then
                 List.drop ((List.length previous) - 1) previous
               else
@@ -281,22 +287,22 @@ viewChapterNavbar model chapter =
                 List.take 1 next
               else
                 next
-                          
+
           in
             viewChapterNavigation previous_crop chapter next_crop
-      
+
   in
-    [ div [ class "index-icon"] 
+    [ div [ class "index-icon"]
       [ a [ href "/chapters", onLinkClick (ChangeLocation "/chapters") ] [ viewIndexIcon, text "Index"]
       ]
     , chapterNavigation
-    , div [ class "share-icon" ] 
+    , div [ class "share-icon" ]
       [ a [ href ( shareLink model.location.href ), target "_blank"] [ viewShareIcon, text "Share" ] ]
     ]
 
 viewChapterNavigation : List Chapter -> Chapter -> List Chapter -> Html Msg
 viewChapterNavigation previous current next =
-  div [ class "chapter-navigation" ] 
+  div [ class "chapter-navigation" ]
     [ ul [ class "previous" ] (List.map viewChapterNavItem previous)
     , ul [ class "current" ] [ viewChapterNavItem current ]
     , ul [ class "next" ] (List.map viewChapterNavItem next)
@@ -307,9 +313,9 @@ viewChapterNavItem chapter =
   let
     chapterPath = "/chapters/" ++ chapter.nid
     chapterText = "#" ++ (toString chapter.index)
-      
-  in  
-    li [ style [ ("background-image", "url(" ++ chapter.featured_image.uri ++ ")" )] ] 
+
+  in
+    li [ style [ ("background-image", "url(" ++ chapter.featured_image.uri ++ ")" )] ]
       [ a [ href chapterPath, onLinkClick (ChangeLocation chapterPath) ]
         [ text chapterText
         , span [ class "chapter-title" ] [ text (": " ++ chapter.title) ]
@@ -318,34 +324,34 @@ viewChapterNavItem chapter =
 
 viewIndexIcon : Html msg
 viewIndexIcon =
-   let svgpath = 
+   let svgpath =
       "M4 22h-4v-4h4v4zm0-12h-4v4h4v-4zm0-8h-4v4h4v-4zm3 0v4h17v-4h-17zm0 12h17v-4h-17v4zm0 8h17v-4h-17v4z"
   in
-    svg 
-      [ xmlSpace "http://www.w3.org/2000/svg" 
-      , Svg.Attributes.width "30" 
-      , Svg.Attributes.height "30" 
+    svg
+      [ xmlSpace "http://www.w3.org/2000/svg"
+      , Svg.Attributes.width "30"
+      , Svg.Attributes.height "30"
       , viewBox "0 0 24 24"
       ]
-      [ path 
-        [ d svgpath ] 
-        [] 
+      [ path
+        [ d svgpath ]
+        []
       ]
 
 viewShareIcon : Html msg
-viewShareIcon = 
-  let svgpath = 
+viewShareIcon =
+  let svgpath =
       "M6 17c2.269-9.881 11-11.667 11-11.667v-3.333l7 6.637-7 6.696v-3.333s-6.17-.171-11 5zm12 .145v2.855h-16v-12h6.598c.768-.787 1.561-1.449 2.339-2h-10.937v16h20v-6.769l-2 1.914z"
   in
-    svg 
-      [ xmlSpace "http://www.w3.org/2000/svg" 
-      , Svg.Attributes.width "30" 
-      , Svg.Attributes.height "30" 
+    svg
+      [ xmlSpace "http://www.w3.org/2000/svg"
+      , Svg.Attributes.width "30"
+      , Svg.Attributes.height "30"
       , viewBox "0 0 24 24"
       ]
-      [ path 
-        [ d svgpath ] 
-        [] 
+      [ path
+        [ d svgpath ]
+        []
       ]
 
 -- Fix FB App ID
@@ -361,16 +367,16 @@ viewTitle model =
   h1 [ class "site-title" ] [ text model.siteInformation.title ]
 
 loading : String -> Html msg
-loading message = 
+loading message =
     span [ class "loading-icon" ] []
 
 markdownOptions : Markdown.Options
 markdownOptions =
   let
     default = Markdown.defaultOptions
-      
+
   in
-      
+
   { default | githubFlavored = Just { tables = False, breaks = True } }
 
 viewAbout : Model -> Html msg
@@ -381,20 +387,20 @@ viewAbout model =
   in
     if content == "" then
       loading ""
-    else 
+    else
       Markdown.toHtmlWith markdownOptions [ class "container about-container" ] content
-      
+
 
 templateHome : Model -> List (Html Msg) -> List (Html Msg)
 templateHome model content =
-    [ div [ class "container navbar-container" ] 
+    [ div [ class "container navbar-container" ]
       [ viewMenu model model.menu
-      , viewSocialLinks model 
+      , viewSocialLinks model
       ]
     , div [ class "container title-container" ]
       [ viewTitle model
       ]
-    ] 
+    ]
     ++ content
     ++ [
     div [ class "container footer-container"]
@@ -403,15 +409,15 @@ templateHome model content =
     ]
 
 templatePages : Model -> List (Html Msg) -> List (Html Msg)
-templatePages model content =   
-  [ div [ class "container navbar-container" ] 
+templatePages model content =
+  [ div [ class "container navbar-container" ]
     [ viewMenu model model.menu
-    , viewSocialLinks model 
+    , viewSocialLinks model
     ]
   , div [ class "container title-container" ]
       [ viewTitle model
       ]
-  ] 
+  ]
   ++ content
   ++ [ div [ class "container footer-container"]
        [ viewSocialLinks model
@@ -419,7 +425,7 @@ templatePages model content =
     ]
 
 templateChapter : Model -> MaybeAsset Chapter -> List (Html Msg) -> List (Html Msg)
-templateChapter model chapter content =   
+templateChapter model chapter content =
   let
     sticky_class =
       case model.navbar of
@@ -427,7 +433,7 @@ templateChapter model chapter content =
         False -> "sticky"
 
     navbar =
-      case chapter of 
+      case chapter of
         AssetNotFound ->
           []
         AssetLoading ->
@@ -435,41 +441,41 @@ templateChapter model chapter content =
         Asset current ->
           viewChapterNavbar model current
 
-    nextchapter = 
-      case chapter of 
+    nextchapter =
+      case chapter of
         AssetNotFound ->
           []
         AssetLoading ->
           []
         Asset current ->
           case model.chapters of
-            Nothing -> 
+            Nothing ->
               []
             Just chapters ->
               let
                 list = sortChapterList chapters
                 next =
                   List.drop current.index list
-                  |> List.head 
+                  |> List.head
               in
-                case next of 
+                case next of
                   Nothing ->
                     [ mailchimpBlock model
                     , facebookFeed model
                     ]
                   Just nchapter ->
                     [ viewChapterFeaturedNext model.language nchapter ]
-      
+
   in
-    [ div [ class ("navbar-container chapternav " ++ sticky_class) ] 
+    [ div [ class ("navbar-container chapternav " ++ sticky_class) ]
       [ div [ class "container" ] navbar
       ]
-    , div [ class ("navbar-container chapternav") ] 
+    , div [ class ("navbar-container chapternav") ]
       [ div [ class "container" ] navbar
       ]
-    ] 
+    ]
     ++ content
-    ++ 
+    ++
     [ skeletonRow [ class "nextchapter" ] nextchapter
     , div [ class "container footer-container"]
          [ viewSocialLinks model
