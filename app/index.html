@@ -80,7 +80,9 @@
 
       app.ports.pageChange.subscribe(function() {
         // Refresh facebook
-        window.setTimeout(FB.XFBML.parse, 500)
+        if (typeof FB != undefined) {
+          window.setTimeout(FB.XFBML.parse, 500);
+        }
         window.setTimeout(function() { lazyLoad(0) }, 500);
       });
 
