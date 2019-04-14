@@ -1,20 +1,20 @@
-module Menu exposing (..)
+module Menu exposing (menu)
 
 import Language exposing (..)
-import Models exposing (MenuItem,Phrase)
+import Models exposing (MenuItem, Phrase)
+
 
 menu : List MenuItem
-menu = 
-    [ 
-      { title = Models.MenuHome
+menu =
+    [ { title = Models.MenuHome
       , path = "/"
       , route = Models.HomeRoute
       }
-      ,{ title = Models.MenuArchive
+    , { title = Models.MenuArchive
       , path = "/chapters"
       , route = Models.ChaptersRoute
       }
-      ,{ title = Models.MenuAbout
+    , { title = Models.MenuAbout
       , path = "/about"
       , route = Models.AboutRoute
       }

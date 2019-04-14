@@ -1,13 +1,14 @@
-module Routing exposing (..)
+module Routing exposing (matchers, parseLocation, routeContent)
 
-import Navigation exposing (Location)
-import Models exposing (ChapterId, Route(..), Model, MaybeAsset(..))
-import Msgs exposing (Msg)
-import UrlParser exposing (..)
-import Html exposing (text, Html)
-import View exposing (viewChapterList, viewHome, viewAbout, templateHome, templatePages, templateChapter)
 import Chapters.Chapter exposing (view)
 import Dict exposing (Dict)
+import Html exposing (Html, text)
+import Models exposing (ChapterId, MaybeAsset(..), Model, Route(..))
+import Msgs exposing (Msg)
+import Navigation exposing (Location)
+import UrlParser exposing (..)
+import View exposing (templateChapter, templateHome, templatePages, viewAbout, viewChapterList, viewHome)
+
 
 matchers : Parser (Route -> a) a
 matchers =
@@ -19,50 +20,68 @@ matchers =
         , map AboutRoute (s "about")
         ]
 
+
 parseLocation : Location -> Route
 parseLocation location =
-    case (parsePath matchers location) of
+    case parsePath matchers location of
         Just route ->
             route
 
         Nothing ->
             NotFoundRoute
 
+
 routeContent : Model -> List (Html Msg)
-routeContent model = case model.route of 
-      HomeRoute ->
-        let content = viewHome model
-        in templateHome model content
+routeContent model =
+    case model.route of
+        HomeRoute ->
+            let
+                content =
+                    viewHome model
+            in
+            templateHome model content
 
-      ChaptersRoute ->
-        let content = viewChapterList model
-        in templatePages model content
+        ChaptersRoute ->
+            let
+                content =
+                    viewChapterList model
+            in
+            templatePages model content
 
-      ChapterRoute id ->
-        let 
-          chapter = 
-            case model.chapters of 
-              Nothing -> 
-                AssetLoading
-              Just chapters ->
-                let c = Dict.get id chapters
-                in 
-                  case c of 
-                    Nothing ->
-                      AssetNotFound
-                    Just chapter ->
-                      Asset chapter
+        ChapterRoute id ->
+            let
+                chapter =
+                    case model.chapters of
+                        Nothing ->
+                            AssetLoading
 
+                        Just chapters ->
+                            let
+                                c =
+                                    Dict.get id chapters
+                            in
+                            case c of
+                                Nothing ->
+                                    AssetNotFound
 
-          content = [ Chapters.Chapter.view chapter]
-          
-        in
-          templateChapter model chapter content
+                                Just chapter ->
+                                    Asset chapter
 
-      AboutRoute ->
-        let content = [ viewAbout model ]
-        in templatePages model content
+                content =
+                    [ Chapters.Chapter.view chapter ]
+            in
+            templateChapter model chapter content
 
-      NotFoundRoute ->
-        let content = [ text "Not Found"  ]
-        in templatePages model content
+        AboutRoute ->
+            let
+                content =
+                    [ viewAbout model ]
+            in
+            templatePages model content
+
+        NotFoundRoute ->
+            let
+                content =
+                    [ text "Not Found" ]
+            in
+            templatePages model content

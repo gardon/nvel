@@ -1,12 +1,15 @@
-module Config.Site exposing (..)
+module Config.Site exposing (aboutData, chaptersListData, homeData, language, notFoundData, siteInformation)
 
-import Models exposing (..)
 import Language exposing (..)
+import Models exposing (..)
+
+
 
 -- TODO: make this file repleceable as well.
 
+
 siteInformation : SiteInformation
-siteInformation = 
+siteInformation =
     { title = ""
     , description = ""
     , facebook_page = ""
@@ -15,17 +18,20 @@ siteInformation =
     , aboutContent = ""
     }
 
+
 homeData : Language -> PageData
 homeData language =
     { title = ""
     , lang = Language.toString language
     }
 
+
 chaptersListData : Language -> PageData
-chaptersListData language = 
+chaptersListData language =
     { title = translate language MenuArchive
     , lang = Language.toString language
     }
+
 
 aboutData : Language -> PageData
 aboutData language =
@@ -33,11 +39,14 @@ aboutData language =
     , lang = Language.toString language
     }
 
+
 notFoundData : Language -> PageData
 notFoundData language =
     { title = "Oops, there was a problem!"
     , lang = Language.toString language
     }
 
+
 language : Language
-language = Pt_Br
+language =
+    Pt_Br
