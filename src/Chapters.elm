@@ -3,7 +3,7 @@ module Chapters exposing (chapterDecoder, decodeChapterContent, decodeChapters, 
 import Dict exposing (Dict)
 import Http exposing (Header, Request)
 import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (decode, hardcoded, optional, required)
+import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import List exposing (..)
 import Models exposing (..)
 import Msgs exposing (..)
@@ -39,7 +39,7 @@ decodeChapterContent =
 
 chapterDecoder : Decode.Decoder Chapter
 chapterDecoder =
-    decode Chapter
+    Decode.succeed Chapter
         |> required "title" Decode.string
         |> required "field_description" Decode.string
         |> required "nid" Decode.string

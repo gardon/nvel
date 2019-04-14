@@ -46,7 +46,7 @@ dateDecoder =
 
 imageDecoder : Decode.Decoder Image
 imageDecoder =
-    decode Image
+    Decode.succeed Image
         |> required "uri" Decode.string
         |> required "width" Decode.int
         |> required "height" Decode.int
@@ -58,7 +58,7 @@ imageDecoder =
 
 decodeDerivative : Decode.Decoder Image.Derivative
 decodeDerivative =
-    decode Image.Derivative
+    Decode.succeed Image.Derivative
         |> required "uri" Decode.string
         |> required "size" Decode.string
 
@@ -93,7 +93,7 @@ decodeSection sectionType =
 
 decodeFullWidthSingleImageSection : Decode.Decoder Section
 decodeFullWidthSingleImageSection =
-    decode Section
+    Decode.succeed Section
         |> hardcoded FullWidthSingleImage
         |> required "image" imageDecoder
         |> required "chapter" Decode.string
@@ -103,7 +103,7 @@ decodeFullWidthSingleImageSection =
 
 decodeSingleImageSection : Decode.Decoder Section
 decodeSingleImageSection =
-    decode Section
+    Decode.succeed Section
         |> hardcoded SingleImage
         |> required "image" imageDecoder
         |> required "chapter" Decode.string
@@ -113,7 +113,7 @@ decodeSingleImageSection =
 
 decodeSpacer : Decode.Decoder Section
 decodeSpacer =
-    decode Section
+    Decode.succeed Section
         |> hardcoded Spacer
         |> hardcoded Image.emptyImage
         |> required "chapter" Decode.string
@@ -129,7 +129,7 @@ decodeTitlePanel =
 
 decodeTitlePanelSection : TitlePanelFeatures -> Decode.Decoder Section
 decodeTitlePanelSection features =
-    decode Section
+    Decode.succeed Section
         |> hardcoded (TitlePanel features)
         |> optional "image" imageDecoder Image.emptyImage
         |> required "chapter" Decode.string
@@ -139,7 +139,7 @@ decodeTitlePanelSection features =
 
 decodeTitlePanelFeatures : Decode.Decoder TitlePanelFeatures
 decodeTitlePanelFeatures =
-    decode TitlePanelFeatures
+    Decode.succeed TitlePanelFeatures
         |> required "title" Decode.string
         |> required "author" Decode.string
         |> required "copyright" Decode.string
@@ -154,7 +154,7 @@ decodeText =
 
 decodeTextSection : String -> Decode.Decoder Section
 decodeTextSection text =
-    decode Section
+    Decode.succeed Section
         |> hardcoded (Text text)
         |> hardcoded Image.emptyImage
         |> required "chapter" Decode.string
@@ -171,7 +171,7 @@ decodeTextSection text =
 
 decodeSiteInformation : Decode.Decoder SiteInformation
 decodeSiteInformation =
-    decode SiteInformation
+    Decode.succeed SiteInformation
         |> required "title" Decode.string
         |> required "description" Decode.string
         |> optional "facebook_page" Decode.string ""

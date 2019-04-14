@@ -140,7 +140,7 @@ viewChapterFeatured lang caption_phrase featured_class chapter =
             "/chapters/" ++ chapter.nid
 
         chapterNumber =
-            "#" ++ toString chapter.index ++ " "
+            "#" ++ String.fromInt chapter.index ++ " "
 
         caption =
             translate lang caption_phrase
@@ -198,7 +198,7 @@ viewChapterListItem chapter =
             "/chapters/" ++ chapter.nid
 
         chapterNumber =
-            "#" ++ toString chapter.index ++ ": "
+            "#" ++ String.fromInt chapter.index ++ ": "
     in
     div [ class "chapter-list-item", onClick (ChangeLocation chapterPath) ]
         [ h2 [] [ a [ href chapterPath, onLinkClick NoOp ] [ span [] [ text chapterNumber ], text chapter.title ] ]
@@ -393,7 +393,7 @@ viewChapterNavItem chapter =
             "/chapters/" ++ chapter.nid
 
         chapterText =
-            "#" ++ toString chapter.index
+            "#" ++ String.fromInt chapter.index
     in
     li [ style "background-image" ("url(" ++ chapter.featured_image.uri ++ ")") ]
         [ a [ href chapterPath, onLinkClick (ChangeLocation chapterPath) ]

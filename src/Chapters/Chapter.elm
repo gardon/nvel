@@ -62,7 +62,7 @@ viewSection model =
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            skeletonRow [ classList classes, "section-" ++ model.chapter ++ "-" ++ toString model.id |> id ]
+            skeletonRow [ classList classes, "section-" ++ model.chapter ++ "-" ++ String.fromInt model.id |> id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -80,7 +80,7 @@ viewSection model =
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            skeletonRowFullWidth [ classList classes, "section-" ++ model.chapter ++ "-" ++ toString model.id |> id ]
+            skeletonRowFullWidth [ classList classes, "section-" ++ model.chapter ++ "-" ++ String.fromInt model.id |> id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -101,7 +101,7 @@ viewSection model =
                     ]
 
                 elementid =
-                    "section-" ++ model.chapter ++ "-" ++ toString model.id
+                    "section-" ++ model.chapter ++ "-" ++ String.fromInt model.id
             in
             skeletonRow [ classList classes, id elementid ]
                 [ viewImage [] model.image
