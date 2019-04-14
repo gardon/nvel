@@ -80,7 +80,7 @@
 
       app.ports.pageChange.subscribe(function() {
         // Refresh facebook
-        if (typeof FB != undefined) {
+        if (typeof FB != "undefined") {
           window.setTimeout(FB.XFBML.parse, 500);
         }
         window.setTimeout(function() { lazyLoad(0) }, 500);
