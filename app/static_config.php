@@ -2,6 +2,6 @@
 
 function static_config() {
   return array(
-    'backend_url' => 'http://localhost'
+    'backend_url' => 'https://server.abismos.com'
   );
 }

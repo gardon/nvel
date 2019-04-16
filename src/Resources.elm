@@ -1,6 +1,5 @@
 module Resources exposing (dateDecoder, decodeDerivative, decodeFullWidthSingleImageSection, decodeSection, decodeSingleImageSection, decodeSiteInformation, decodeSpacer, decodeText, decodeTextSection, decodeTitlePanel, decodeTitlePanelFeatures, decodeTitlePanelSection, getAuth, imageDecoder, sectionDecoder)
 
-import BasicAuth
 import Date
 import Http exposing (Header, Request)
 import Image exposing (Image)
@@ -15,13 +14,9 @@ import Models exposing (..)
 
 getAuth : String -> Decode.Decoder a -> Request a
 getAuth url decoder =
-    let
-        authHeader =
-            BasicAuth.buildAuthorizationHeader "" ""
-    in
     Http.request
         { method = "GET"
-        , headers = [ authHeader ]
+        , headers = []
         , url = url
         , body = Http.emptyBody
         , expect = Http.expectJson decoder

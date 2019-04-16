@@ -3,7 +3,7 @@ module Models exposing (BackendConfig, Chapter, ChapterId, Environment(..), Lang
 import Date exposing (Date)
 import Dict exposing (Dict)
 import Image exposing (Image)
-import Navigation exposing (Location)
+import Browser.Navigation exposing (Key)
 
 
 type alias Model =
@@ -12,10 +12,10 @@ type alias Model =
     , pageData : PageData
     , backendConfig : BackendConfig
     , menu : List MenuItem
-    , route : Route
+    , route : Key
     , language : Language
     , navbar : Bool
-    , location : Location
+    , location : Url
     }
 
 

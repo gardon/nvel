@@ -21,28 +21,31 @@ import List exposing (head)
 import Menu exposing (..)
 import Models exposing (..)
 import Msgs exposing (..)
-import Navigation exposing (Location, newUrl)
+import Browser
+import Browser.Navigation as Nav
 import Routing exposing (parseLocation, routeContent)
 import Skeleton exposing (..)
 import Task
+import Url
 import View exposing (..)
 
 
+main : Program () Model Msg
 main =
-    Navigation.program OnLocationChange
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
-
-
+  Browser.application
+    { init = init
+    , view = view
+    , update = update
+    , subscriptions = subscriptions
+    , onUrlChange = OnLocationChange
+    , onUrlRequest = ChangeLocation
+    }
 
 -- UPDATE
 
-
+init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init : Location -> ( Model, Cmd Msg )
-init location =
+init flags location route =
     let
         chapters =
             Nothing
@@ -61,9 +64,6 @@ init location =
 
         menu =
             Menu.menu
-
-        route =
-            parseLocation location
 
         model =
             Model chapters siteInformation pageData backendConfig menu route lang True location
@@ -114,8 +114,14 @@ update msg model =
         UpdateSiteInfo (Err _) ->
             ( model, Cmd.none )
 
-        ChangeLocation path ->
-            ( model, Cmd.batch [ Task.attempt ScrollTop (Dom.Scroll.toTop "scroll-top"), newUrl path ] )
+        ChangeLocation urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                  -- ( model, Cmd.batch [ Task.attempt ScrollTop (Dom.Scroll.toTop "scroll-top"), Nav.pushUrl model.key (Url.toString url) ] )
+                  ( model, Nav.pushUrl model.key (Url.toString url) )
+
+                Browser.External href ->
+                  ( model, Nav.load href )
 
         ScrollTop (Ok x) ->
             ( model, Cmd.none )

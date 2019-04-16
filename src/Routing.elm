@@ -6,22 +6,23 @@ import Html exposing (Html, text)
 import Models exposing (ChapterId, MaybeAsset(..), Model, Route(..))
 import Msgs exposing (Msg)
 import Navigation exposing (Location)
-import UrlParser exposing (..)
+import Url.Parser exposing (..)
+import Url
 import View exposing (templateChapter, templateHome, templatePages, viewAbout, viewChapterList, viewHome)
 
 
 matchers : Parser (Route -> a) a
 matchers =
     oneOf
-        [ map HomeRoute top
+        [ map HomeRoute     top
         , map ChaptersRoute (s "chapters" </> top)
-        , map ChapterRoute (s "chapters" </> string)
+        , map ChapterRoute  (s "chapters" </> string)
         , map ChaptersRoute (s "chapters")
-        , map AboutRoute (s "about")
+        , map AboutRoute    (s "about")
         ]
 
 
-parseLocation : Location -> Route
+parseLocation : Url -> Route
 parseLocation location =
     case parsePath matchers location of
         Just route ->

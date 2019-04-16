@@ -1,7 +1,7 @@
 module Chapters exposing (chapterDecoder, decodeChapterContent, decodeChapters, getChapterContent, getChapters, loadImage, loadImageSection, zoomImage, zoomImageSection)
 
 import Dict exposing (Dict)
-import Http exposing (Header, Request)
+import Http exposing (..)
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import List exposing (..)

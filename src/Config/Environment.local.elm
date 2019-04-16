@@ -1,8 +1,9 @@
-module Config.Environment exposing (..)
+module Config.Environment exposing (backend)
 
 import Models exposing (..)
 
+
 backend : BackendConfig
-backend = {
-    backendURL = "http://localhost:8080/"
+backend =
+    { backendURL = "https://server.abismos.com/"
     }
