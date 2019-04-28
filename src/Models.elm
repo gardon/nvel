@@ -1,8 +1,9 @@
 module Models exposing (BackendConfig, Chapter, ChapterId, Environment(..), Language(..), MaybeAsset(..), MenuItem, Model, NavbarAction(..), PageData, Phrase(..), Route(..), Section, SectionType(..), SiteInformation, SocialIconType(..), TitlePanelFeatures, chapterContentEndpoint, chapterListEndpoint, siteInformationEndpoint)
 
-import Date exposing (Date)
+import Time
 import Dict exposing (Dict)
 import Image exposing (Image)
+import Url exposing (Url)
 import Browser.Navigation exposing (Key)
 
 
@@ -12,7 +13,8 @@ type alias Model =
     , pageData : PageData
     , backendConfig : BackendConfig
     , menu : List MenuItem
-    , route : Key
+    , route : Route
+    , key: Key
     , language : Language
     , navbar : Bool
     , location : Url
@@ -34,7 +36,7 @@ type alias Chapter =
     , index : Int
     , thumbnail : Image
     , authors : List String
-    , date : Date
+    , date : Time.Posix
     , featured_image : Image
     }
 

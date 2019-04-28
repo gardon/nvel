@@ -5,9 +5,8 @@ import Dict exposing (Dict)
 import Html exposing (Html, text)
 import Models exposing (ChapterId, MaybeAsset(..), Model, Route(..))
 import Msgs exposing (Msg)
-import Navigation exposing (Location)
 import Url.Parser exposing (..)
-import Url
+import Url exposing (Url)
 import View exposing (templateChapter, templateHome, templatePages, viewAbout, viewChapterList, viewHome)
 
 
@@ -24,7 +23,7 @@ matchers =
 
 parseLocation : Url -> Route
 parseLocation location =
-    case parsePath matchers location of
+    case parse matchers location of
         Just route ->
             route
 
@@ -51,7 +50,7 @@ routeContent model =
 
         ChapterRoute id ->
             let
-                chapter =
+                maybeChapter =
                     case model.chapters of
                         Nothing ->
                             AssetLoading
@@ -69,9 +68,9 @@ routeContent model =
                                     Asset chapter
 
                 content =
-                    [ Chapters.Chapter.view chapter ]
+                    [ Chapters.Chapter.view maybeChapter ]
             in
-            templateChapter model chapter content
+            templateChapter model maybeChapter content
 
         AboutRoute ->
             let

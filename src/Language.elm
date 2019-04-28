@@ -1,11 +1,14 @@
-module Language exposing (toString, translate)
+module Language exposing (toString, translate, translateMonth)
 
 import Models exposing (..)
+import Time exposing (..)
 
 
 type alias Translator =
     Phrase -> String
 
+type alias MonthTranslator =
+    Month -> String
 
 toString : Language -> String
 toString lang =
@@ -26,6 +29,14 @@ translate lang =
         Pt_Br ->
             translatePtBr
 
+translateMonth : Language -> MonthTranslator
+translateMonth lang =
+    case lang of
+        En ->
+            translateMonthEn
+
+        Pt_Br ->
+            translateMonthPtBr
 
 translatePtBr : Translator
 translatePtBr phrase =
@@ -69,6 +80,21 @@ translatePtBr phrase =
         NextChapter ->
             "Continue lendo..."
 
+translateMonthPtBr : MonthTranslator
+translateMonthPtBr month =
+    case month of
+      Jan -> "Jan"
+      Feb -> "Fev"
+      Mar -> "Mar"
+      Apr -> "Abr"
+      May -> "Mai"
+      Jun -> "Jun"
+      Jul -> "Jul"
+      Aug -> "Ago"
+      Sep -> "Set"
+      Oct -> "Out"
+      Nov -> "Nov"
+      Dec -> "Dez"
 
 translateEn : Translator
 translateEn phrase =
@@ -111,3 +137,19 @@ translateEn phrase =
 
         NextChapter ->
             "Keep Reading"
+
+translateMonthEn : MonthTranslator
+translateMonthEn month =
+    case month of
+      Jan -> "Jan"
+      Feb -> "Feb"
+      Mar -> "Mar"
+      Apr -> "Apr"
+      May -> "May"
+      Jun -> "Jun"
+      Jul -> "Jul"
+      Aug -> "Aug"
+      Sep -> "Sep"
+      Oct -> "Oct"
+      Nov -> "Nov"
+      Dec -> "Dec"

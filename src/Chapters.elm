@@ -20,7 +20,10 @@ getChapters model =
         url =
             model.backendConfig.backendURL ++ chapterListEndpoint
     in
-    Http.send ChaptersLoad (Http.get url decodeChapters)
+        Http.get
+            { url = url
+            , expect = Http.expectJson ChaptersLoad decodeChapters
+            }
 
 
 getChapterContent : Model -> Chapter -> Cmd Msg
@@ -29,7 +32,10 @@ getChapterContent model chapter =
         url =
             model.backendConfig.backendURL ++ chapterContentEndpoint ++ "/" ++ chapter.nid ++ "?_format=json"
     in
-    Http.send ChapterContentLoad (Http.get url chapterDecoder)
+      Http.get
+          { url = url
+          , expect = Http.expectJson ChapterContentLoad chapterDecoder
+          }
 
 
 decodeChapterContent : Decode.Decoder (List Section)
@@ -67,8 +73,8 @@ zoomImage model chapter section =
 
 
 zoomImageSection : Int -> Maybe Chapter -> Maybe Chapter
-zoomImageSection index chapter =
-    case chapter of
+zoomImageSection index maybeChapter =
+    case maybeChapter of
         Nothing ->
             Nothing
 
@@ -77,11 +83,11 @@ zoomImageSection index chapter =
                 content =
                     chapter.content
 
-                section =
+                maybeSection =
                     drop (index - 1) content
                         |> head
             in
-            case section of
+            case maybeSection of
                 Nothing ->
                     Just chapter
 
@@ -108,8 +114,8 @@ loadImage model chapter section =
 
 
 loadImageSection : Int -> Maybe Chapter -> Maybe Chapter
-loadImageSection index chapter =
-    case chapter of
+loadImageSection index maybeChapter =
+    case maybeChapter of
         Nothing ->
             Nothing
 
@@ -118,11 +124,11 @@ loadImageSection index chapter =
                 content =
                     chapter.content
 
-                section =
+                maybeSection =
                     drop (index - 1) content
                         |> head
             in
-            case section of
+            case maybeSection of
                 Nothing ->
                     Just chapter
 

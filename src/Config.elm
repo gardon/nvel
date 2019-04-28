@@ -3,7 +3,7 @@ module Config exposing (chapterData, getChapterFromId, getLanguage, getSiteInfor
 import Config.Environment exposing (..)
 import Config.Site exposing (..)
 import Dict exposing (Dict)
-import Http exposing (Header, Request)
+import Http exposing (Header)
 import Json.Decode as Decode
 import Language exposing (..)
 import Models exposing (..)
@@ -27,8 +27,8 @@ siteInformation =
 
 
 getChapterFromId : Maybe (Dict String Chapter) -> String -> Maybe Chapter
-getChapterFromId chapters id =
-    case chapters of
+getChapterFromId maybeChapters id =
+    case maybeChapters of
         Nothing ->
             Nothing
 
@@ -39,11 +39,11 @@ getChapterFromId chapters id =
 chapterData : Model -> String -> PageData
 chapterData model id =
     let
-        chapter =
+        maybeChapter =
             getChapterFromId model.chapters id
 
         title =
-            case chapter of
+            case maybeChapter of
                 Nothing ->
                     translate model.language NotFound
 
@@ -91,4 +91,7 @@ getSiteInformation model =
         url =
             model.backendConfig.backendURL ++ siteInformationEndpoint
     in
-    Http.send UpdateSiteInfo (Http.get url decodeSiteInformation)
+        Http.get
+            { url = url
+            , expect = Http.expectJson UpdateSiteInfo decodeSiteInformation
+            }

@@ -8,12 +8,10 @@ import Chapters exposing (..)
 import Chapters.Chapter
 import Config exposing (..)
 import Debug exposing (..)
-import Dom exposing (Id)
-import Dom.Scroll
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Http exposing (Header, Request)
+import Http exposing (Header)
 import Image
 import Json.Decode as Decode
 import Language exposing (..)
@@ -44,8 +42,7 @@ main =
 -- UPDATE
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init : Location -> ( Model, Cmd Msg )
-init flags location route =
+init flags location key =
     let
         chapters =
             Nothing
@@ -65,8 +62,11 @@ init flags location route =
         menu =
             Menu.menu
 
+        route =
+            parseLocation location
+
         model =
-            Model chapters siteInformation pageData backendConfig menu route lang True location
+            Model chapters siteInformation pageData backendConfig menu route key lang True location
     in
     ( model, getSiteInformation model )
 
@@ -123,11 +123,11 @@ update msg model =
                 Browser.External href ->
                   ( model, Nav.load href )
 
-        ScrollTop (Ok x) ->
-            ( model, Cmd.none )
-
-        ScrollTop (Err x) ->
-            ( model, Cmd.none )
+        -- ScrollTop (Ok x) ->
+        --     ( model, Cmd.none )
+        --
+        -- ScrollTop (Err x) ->
+        --     ( model, Cmd.none )
 
         OnLocationChange location ->
             let
@@ -168,13 +168,15 @@ update msg model =
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Model -> Browser.Document Msg
 view model =
     let
-        content =
+       title =
+            model.pageData.title
+       content =
             routeContent model
     in
-    div [] content
+       Browser.Document title content
 
 
 

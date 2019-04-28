@@ -1,12 +1,12 @@
 module View exposing (facebookFeed, linkButton, linkButtonBig, linkButtonPrimary, loading, markdownOptions, shareLink, sortChapterList, templateChapter, templateHome, templatePages, viewAbout, viewChapterFeatured, viewChapterFeaturedCurrent, viewChapterFeaturedFirst, viewChapterFeaturedNext, viewChapterList, viewChapterListItem, viewChapterNavItem, viewChapterNavbar, viewChapterNavigation, viewDeviantArtLink, viewFacebookPageLink, viewHome, viewImage, viewIndexIcon, viewInstagramLink, viewMenu, viewMenuItem, viewShareIcon, viewSocialIcon, viewSocialLinks, viewTitle)
 
-import Date.Format
+import Time
 import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Image exposing (Derivative, Image)
-import Language exposing (translate)
+import Language exposing (translate, translateMonth)
 import Markdown
 import Menu exposing (..)
 import Models exposing (..)
@@ -16,6 +16,7 @@ import Svg exposing (path, svg)
 import Svg.Attributes exposing (d, viewBox, xmlSpace)
 import View.Attributes exposing (..)
 import View.Mailchimp exposing (..)
+import Url exposing (Url)
 
 
 viewHome : Model -> List (Html Msg)
@@ -108,7 +109,7 @@ viewChapterList model =
         Just chapters ->
             let
                 list =
-                    List.map viewChapterListItem (sortChapterList chapters)
+                    List.map (viewChapterListItem model.language) (sortChapterList chapters)
 
                 length =
                     List.length list
@@ -145,7 +146,7 @@ viewChapterFeatured lang caption_phrase featured_class chapter =
         caption =
             translate lang caption_phrase
     in
-    div ([ class ("chapter-featured equal-heights " ++ featured_class), onLinkClick (ChangeLocation chapterPath) ] ++ skeletonGridSize SixColumns)
+    div ([ class ("chapter-featured equal-heights " ++ featured_class) ] ++ skeletonGridSize SixColumns)
         [ viewImage [] chapter.featured_image
         , div [ class "image-overlay" ]
             [ h3 [] [ text caption ]
@@ -156,9 +157,18 @@ viewChapterFeatured lang caption_phrase featured_class chapter =
                 |> linkButtonPrimary chapterPath
             , div [ class "description" ] [ text chapter.field_description ]
             , div [ class "author" ] [ text (String.concat chapter.authors) ]
-            , div [ class "date" ] [ text (Date.Format.format "%Y %b %e" chapter.date) ]
+            , div [ class "date" ] [ text (viewDate lang chapter.date) ]
             ]
         ]
+
+viewDate : Language -> Time.Posix -> String
+viewDate lang time =
+  let
+    year = Time.toYear Time.utc time |> String.fromInt
+    month = Time.toMonth Time.utc time |> translateMonth lang
+    day = Time.toDay Time.utc time |> String.fromInt
+  in
+    year ++ " " ++ month ++ " " ++ day
 
 
 viewChapterFeaturedCurrent : Language -> Chapter -> Html Msg
@@ -183,7 +193,7 @@ linkButtonPrimary path title =
 
 linkButton : List (Attribute Msg) -> String -> String -> Html Msg
 linkButton attr path title =
-    a ([ href path, onLinkClick (ChangeLocation path), class "button" ] ++ attr) [ text title ]
+    a ([ href path, class "button" ] ++ attr) [ text title ]
 
 
 linkButtonBig : String -> String -> Html Msg
@@ -191,8 +201,8 @@ linkButtonBig path title =
     linkButton [ class "big" ] path title
 
 
-viewChapterListItem : Chapter -> Html Msg
-viewChapterListItem chapter =
+viewChapterListItem : Language -> Chapter -> Html Msg
+viewChapterListItem lang chapter =
     let
         chapterPath =
             "/chapters/" ++ chapter.nid
@@ -200,11 +210,11 @@ viewChapterListItem chapter =
         chapterNumber =
             "#" ++ String.fromInt chapter.index ++ ": "
     in
-    div [ class "chapter-list-item", onClick (ChangeLocation chapterPath) ]
-        [ h2 [] [ a [ href chapterPath, onLinkClick NoOp ] [ span [] [ text chapterNumber ], text chapter.title ] ]
+    div [ class "chapter-list-item" ]
+        [ h2 [] [ a [ href chapterPath ] [ span [] [ text chapterNumber ], text chapter.title ] ]
         , div [ class "description" ] [ text chapter.field_description ]
         , viewImage [] chapter.thumbnail
-        , div [ class "date" ] [ text (Date.Format.format "%Y %b %e" chapter.date) ]
+        , div [ class "date" ] [ text (viewDate lang chapter.date) ]
         ]
 
 
@@ -252,7 +262,7 @@ viewMenuItem model item =
                 ""
     in
     li [ class "navbar-item", class activeclass ]
-        [ a [ href item.path, onLinkClick (ChangeLocation item.path), class "navbar-link" ] [ text (translate model.language item.title) ]
+        [ a [ href item.path, class "navbar-link" ] [ text (translate model.language item.title) ]
         ]
 
 
@@ -369,11 +379,11 @@ viewChapterNavbar model chapter =
                     viewChapterNavigation previous_crop chapter next_crop
     in
     [ div [ class "index-icon" ]
-        [ a [ href "/chapters", onLinkClick (ChangeLocation "/chapters") ] [ viewIndexIcon, text "Index" ]
+        [ a [ href "/chapters" ] [ viewIndexIcon, text "Index" ]
         ]
     , chapterNavigation
     , div [ class "share-icon" ]
-        [ a [ href (shareLink model.location.href), target "_blank" ] [ viewShareIcon, text "Share" ] ]
+        [ a [ href (shareLink model.location), target "_blank" ] [ viewShareIcon, text "Share" ] ]
     ]
 
 
@@ -396,7 +406,7 @@ viewChapterNavItem chapter =
             "#" ++ String.fromInt chapter.index
     in
     li [ style "background-image" ("url(" ++ chapter.featured_image.uri ++ ")") ]
-        [ a [ href chapterPath, onLinkClick (ChangeLocation chapterPath) ]
+        [ a [ href chapterPath ]
             [ text chapterText
             , span [ class "chapter-title" ] [ text (": " ++ chapter.title) ]
             ]
@@ -443,14 +453,14 @@ viewShareIcon =
 -- Fix FB App ID
 
 
-shareLink : String -> String
+shareLink : Url -> String
 shareLink href =
     "https://www.facebook.com/dialog/share?"
         ++ "app_id="
         ++ "1689418697967004"
         ++ "&display=popup"
         ++ "&href="
-        ++ href
+        ++ Url.toString href
 
 
 viewTitle : Model -> Html Msg

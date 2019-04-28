@@ -21,8 +21,8 @@ srcset derivatives =
 
 
 sizes : List String -> Attribute msg
-sizes sizes =
-    sizes
+sizes sizesList =
+    sizesList
         |> List.intersperse ", "
         |> String.concat
         |> attribute "sizes"
@@ -41,4 +41,4 @@ onLinkClick message =
             , preventDefault = True
             }
     in
-    onWithOptions "click" options (Decode.succeed message)
+    onClick message

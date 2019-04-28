@@ -1,7 +1,6 @@
 module Msgs exposing (Msg(..))
 
 import Dict exposing (Dict)
-import Dom
 import Http exposing (Error)
 import Image exposing (Image)
 import Models exposing (..)
@@ -17,6 +16,6 @@ type Msg
     | ChangeLocation Browser.UrlRequest
     | Navbar NavbarAction
     | ToggleZoomedImage String Int
-    | ScrollTop (Result Dom.Error ())
+    --| ScrollTop (Result Dom.Error ())
     | LoadImage String Int
     | NoOp

@@ -1,10 +1,10 @@
-module Resources exposing (dateDecoder, decodeDerivative, decodeFullWidthSingleImageSection, decodeSection, decodeSingleImageSection, decodeSiteInformation, decodeSpacer, decodeText, decodeTextSection, decodeTitlePanel, decodeTitlePanelFeatures, decodeTitlePanelSection, getAuth, imageDecoder, sectionDecoder)
+module Resources exposing (dateDecoder, decodeDerivative, decodeFullWidthSingleImageSection, decodeSection, decodeSingleImageSection, decodeSiteInformation, decodeSpacer, decodeText, decodeTextSection, decodeTitlePanel, decodeTitlePanelFeatures, decodeTitlePanelSection, imageDecoder, sectionDecoder)
 
-import Date
-import Http exposing (Header, Request)
+import Time
+import Http exposing (Header)
 import Image exposing (Image)
 import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (decode, hardcoded, optional, required)
+import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Models exposing (..)
 
 
@@ -12,30 +12,13 @@ import Models exposing (..)
 --import Markdown
 
 
-getAuth : String -> Decode.Decoder a -> Request a
-getAuth url decoder =
-    Http.request
-        { method = "GET"
-        , headers = []
-        , url = url
-        , body = Http.emptyBody
-        , expect = Http.expectJson decoder
-        , timeout = Nothing
-        , withCredentials = False
-        }
 
-
-dateDecoder : Decode.Decoder Date.Date
+dateDecoder : Decode.Decoder Time.Posix
 dateDecoder =
-    Decode.string
+    Decode.int
         |> Decode.andThen
             (\val ->
-                case Date.fromString val of
-                    Err err ->
-                        Decode.fail err
-
-                    Ok date ->
-                        Decode.succeed <| date
+                Decode.succeed <| Time.millisToPosix val
             )
 
 

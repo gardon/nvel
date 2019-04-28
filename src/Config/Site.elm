@@ -20,30 +20,30 @@ siteInformation =
 
 
 homeData : Language -> PageData
-homeData language =
+homeData lang =
     { title = ""
-    , lang = Language.toString language
+    , lang = Language.toString lang
     }
 
 
 chaptersListData : Language -> PageData
-chaptersListData language =
+chaptersListData lang =
     { title = translate language MenuArchive
-    , lang = Language.toString language
+    , lang = Language.toString lang
     }
 
 
 aboutData : Language -> PageData
-aboutData language =
+aboutData lang =
     { title = translate language MenuAbout
-    , lang = Language.toString language
+    , lang = Language.toString lang
     }
 
 
 notFoundData : Language -> PageData
-notFoundData language =
+notFoundData lang =
     { title = "Oops, there was a problem!"
-    , lang = Language.toString language
+    , lang = Language.toString lang
     }
 
 
