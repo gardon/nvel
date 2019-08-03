@@ -18,7 +18,7 @@ dateDecoder =
     Decode.int
         |> Decode.andThen
             (\val ->
-                Decode.succeed <| Time.millisToPosix val
+                Decode.succeed <| Time.millisToPosix (val * 1000)
             )
 
 

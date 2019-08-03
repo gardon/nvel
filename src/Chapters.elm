@@ -53,7 +53,7 @@ chapterDecoder =
         |> required "index" Decode.int
         |> required "thumbnail" imageDecoder
         |> required "authors" (Decode.list Decode.string)
-        |> required "publication_date" dateDecoder
+        |> required "publication_date_unix" dateDecoder
         |> required "featured_image" imageDecoder
 
 

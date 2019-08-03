@@ -5,5 +5,5 @@ import Models exposing (..)
 
 backend : BackendConfig
 backend =
-    { backendURL = "https://server.abismos.com/"
+    { backendURL = "http://localhost/"
     }
