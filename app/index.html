@@ -42,15 +42,6 @@
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <div id="fb-root"></div>
-  <script>(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = 'https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v2.11&appId=1689418697967004&autoLogAppEvents=1';
-    fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
-
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div id="main">
@@ -62,6 +53,7 @@
     <script>
       var node = document.getElementById('main');
       var app = Elm.Main.init(node);
+
       app.ports.updatePageData.subscribe(function(pagedata) {
         //document.title = pagedata.title;
         htmlEl = document.documentElement;
@@ -76,13 +68,10 @@
             }
           })
         }
+        window.setTimeout(function () { lazyLoad(0) }, 200);
       });
 
       app.ports.pageChange.subscribe(function() {
-        // Refresh facebook
-        if (typeof FB != "undefined") {
-          window.setTimeout(FB.XFBML.parse, 500);
-        }
         window.setTimeout(function() { lazyLoad(0) }, 500);
       });
 

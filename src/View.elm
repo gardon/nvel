@@ -1,4 +1,4 @@
-module View exposing (facebookFeed, linkButton, linkButtonBig, linkButtonPrimary, loading, markdownOptions, shareLink, sortChapterList, templateChapter, templateHome, templatePages, viewAbout, viewChapterFeatured, viewChapterFeaturedCurrent, viewChapterFeaturedFirst, viewChapterFeaturedNext, viewChapterList, viewChapterListItem, viewChapterNavItem, viewChapterNavbar, viewChapterNavigation, viewDeviantArtLink, viewFacebookPageLink, viewHome, viewImage, viewIndexIcon, viewInstagramLink, viewMenu, viewMenuItem, viewShareIcon, viewSocialIcon, viewSocialLinks, viewTitle)
+module View exposing (linkButton, linkButtonBig, linkButtonPrimary, loading, markdownOptions, sortChapterList, templateChapter, templateHome, templatePages, viewAbout, viewChapterFeatured, viewChapterFeaturedCurrent, viewChapterFeaturedFirst, viewChapterFeaturedNext, viewChapterList, viewChapterListItem, viewChapterNavItem, viewChapterNavbar, viewChapterNavigation, viewDeviantArtLink, viewFacebookPageLink, viewHome, viewImage, viewIndexIcon, viewInstagramLink, viewMenu, viewMenuItem, viewSocialIcon, viewSocialLinks, viewTitle)
 
 import Time
 import Dict exposing (Dict)
@@ -17,6 +17,7 @@ import Svg.Attributes exposing (d, viewBox, xmlSpace)
 import View.Attributes exposing (..)
 import View.Mailchimp exposing (..)
 import Url exposing (Url)
+import Browser.Dom exposing (..)
 
 
 viewHome : Model -> List (Html Msg)
@@ -59,9 +60,7 @@ viewHome model =
                 thirdrow =
                     skeletonRow []
                         [ mailchimpBlock model
-                        , facebookFeed model
-
-                        --, instagramFeed model
+                        -- ADD NEWS
                         ]
             in
             [ div []
@@ -70,35 +69,6 @@ viewHome model =
                 , thirdrow
                 ]
             ]
-
-
-facebookFeed : Model -> Html msg
-facebookFeed model =
-    let
-        page =
-            model.siteInformation.facebook_page
-
-        title =
-            model.siteInformation.title
-    in
-    div (skeletonGridSize SixColumns)
-        [ div
-            [ class "fb-page"
-            , dataAttr "href" ("https://www.facebook.com/" ++ page ++ "/")
-            , dataAttr "small-header" "false"
-            , dataAttr "adapt-container-width" "true"
-            , dataAttr "hide-cover" "false"
-            , dataAttr "show-facepile" "false"
-            , dataAttr "width" "300"
-            ]
-            [ blockquote
-                [ Html.Attributes.cite "https://www.facebook.com/abismos.oficial/"
-                , class "fb-xfbml-parse-ignore"
-                ]
-                [ a [ href "https://www.facebook.com/abismos.oficial/" ] [ text title ] ]
-            ]
-        ]
-
 
 viewChapterList : Model -> List (Html Msg)
 viewChapterList model =
@@ -382,8 +352,6 @@ viewChapterNavbar model chapter =
         [ a [ href "/chapters" ] [ viewIndexIcon, text "Index" ]
         ]
     , chapterNavigation
-    , div [ class "share-icon" ]
-        [ a [ href (shareLink model.location), target "_blank" ] [ viewShareIcon, text "Share" ] ]
     ]
 
 
@@ -429,38 +397,6 @@ viewIndexIcon =
             [ d svgpath ]
             []
         ]
-
-
-viewShareIcon : Html msg
-viewShareIcon =
-    let
-        svgpath =
-            "M6 17c2.269-9.881 11-11.667 11-11.667v-3.333l7 6.637-7 6.696v-3.333s-6.17-.171-11 5zm12 .145v2.855h-16v-12h6.598c.768-.787 1.561-1.449 2.339-2h-10.937v16h20v-6.769l-2 1.914z"
-    in
-    svg
-        [ xmlSpace "http://www.w3.org/2000/svg"
-        , Svg.Attributes.width "30"
-        , Svg.Attributes.height "30"
-        , viewBox "0 0 24 24"
-        ]
-        [ path
-            [ d svgpath ]
-            []
-        ]
-
-
-
--- Fix FB App ID
-
-
-shareLink : Url -> String
-shareLink href =
-    "https://www.facebook.com/dialog/share?"
-        ++ "app_id="
-        ++ "1689418697967004"
-        ++ "&display=popup"
-        ++ "&href="
-        ++ Url.toString href
 
 
 viewTitle : Model -> Html Msg
@@ -528,7 +464,6 @@ templatePages model content =
                 ]
            ]
 
-
 templateChapter : Model -> MaybeAsset Chapter -> List (Html Msg) -> List (Html Msg)
 templateChapter model chapter content =
     let
@@ -575,9 +510,7 @@ templateChapter model chapter content =
                             in
                             case next of
                                 Nothing ->
-                                    [ mailchimpBlock model
-                                    , facebookFeed model
-                                    ]
+                                    [ mailchimpBlock model ]
 
                                 Just nchapter ->
                                     [ viewChapterFeaturedNext model.language nchapter ]

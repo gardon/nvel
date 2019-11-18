@@ -23,7 +23,7 @@ mailchimpBlock model =
         button_text =
             translate model.language MailchimpButton
     in
-    div (skeletonGridSize SixColumns)
+    div (skeletonGridSize TwelveColumns)
         [ div [ id "mc_embed_signup" ]
             [ label [ Html.Attributes.for "mce-EMAIL" ] [ text text_message ]
             , Html.form
