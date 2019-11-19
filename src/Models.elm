@@ -1,59 +1,68 @@
-module Models exposing (..)
+module Models exposing (BackendConfig, Chapter, ChapterId, Environment(..), Language(..), MaybeAsset(..), MenuItem, Model, NavbarAction(..), PageData, Phrase(..), Route(..), Section, SectionType(..), SiteInformation, SocialIconType(..), TitlePanelFeatures, chapterContentEndpoint, chapterListEndpoint, siteInformationEndpoint)
 
+import Time
 import Dict exposing (Dict)
 import Image exposing (Image)
-import Date exposing (Date)
-import Navigation exposing (Location)
+import Url exposing (Url)
+import Browser.Navigation exposing (Key)
+
 
 type alias Model =
-  { chapters : Maybe (Dict String Chapter)
-  , siteInformation : SiteInformation
-  , pageData : PageData
-  , backendConfig : BackendConfig
-  , menu : List MenuItem
-  , route : Route
-  , language : Language
-  , navbar : Bool
-  , location : Location
-  }
+    { chapters : Maybe (Dict String Chapter)
+    , siteInformation : SiteInformation
+    , pageData : PageData
+    , backendConfig : BackendConfig
+    , menu : List MenuItem
+    , route : Route
+    , key: Key
+    , language : Language
+    , navbar : Bool
+    , location : Url
+    }
 
-type alias MenuItem = 
-  { title : Phrase
-  , path : String
-  , route : Route
-  }
+
+type alias MenuItem =
+    { title : Phrase
+    , path : String
+    , route : Route
+    }
+
 
 type alias Chapter =
-  { title : String
-  , field_description: String
-  , nid : String
-  , content: List Section
-  , index: Int
-  , thumbnail: Image
-  , authors: List String
-  , date: Date
-  , featured_image: Image
-  }
+    { title : String
+    , field_description : String
+    , nid : String
+    , content : List Section
+    , index : Int
+    , thumbnail : Image
+    , authors : List String
+    , date : Time.Posix
+    , featured_image : Image
+    }
+
 
 type MaybeAsset a
-  = AssetNotFound
-  | AssetLoading
-  | Asset a
+    = AssetNotFound
+    | AssetLoading
+    | Asset a
+
 
 type SectionType
-  = SingleImage
-  | FullWidthSingleImage
-  | TitlePanel TitlePanelFeatures
-  | Spacer
-  | Text String
+    = SingleImage
+    | FullWidthSingleImage
+    | TitlePanel TitlePanelFeatures
+    | Spacer
+    | Text String
+
 
 type alias Section =
     { sectionType : SectionType
-    , image : Image 
+    , image : Image
     , chapter : String
-    , id : Int 
-    , zoomed: Bool
+    , id : Int
+    , zoomed : Bool
     }
+
 
 type alias TitlePanelFeatures =
     { title : String
@@ -62,11 +71,13 @@ type alias TitlePanelFeatures =
     , extra : String
     }
 
+
 type alias BackendConfig =
     { backendURL : String }
 
-type alias SiteInformation = 
-    { title : String 
+
+type alias SiteInformation =
+    { title : String
     , description : String
     , facebook_page : String
     , instagram_handle : String
@@ -74,14 +85,20 @@ type alias SiteInformation =
     , aboutContent : String
     }
 
-type alias PageData = 
+
+type alias PageData =
     { title : String
-    , lang: String
+    , lang : String
     }
 
-type Environment = Local
 
-type alias ChapterId = String
+type Environment
+    = Local
+
+
+type alias ChapterId =
+    String
+
 
 type Route
     = HomeRoute
@@ -90,14 +107,17 @@ type Route
     | AboutRoute
     | NotFoundRoute
 
+
 type SocialIconType
     = FacebookIcon
     | InstagramIcon
     | DeviantArtIcon
 
+
 type Language
     = En
     | Pt_Br
+
 
 type Phrase
     = MenuHome
@@ -107,19 +127,26 @@ type Phrase
     | StartFromBeginning
     | ReadIt
     | ListAllChapters
-    | MailchimpText 
-    | MailchimpSmall 
+    | MailchimpText
+    | MailchimpSmall
     | MailchimpButton
     | Loading
     | NotFound
     | NextChapter
 
+
 type NavbarAction
     = Show
     | Hide
 
-siteInformationEndpoint = "nvel_base?_format=json"
-chapterListEndpoint = "chapters?_format=json"
-chapterContentEndpoint = "chapters"
+
+siteInformationEndpoint =
+    "nvel_base?_format=json"
 
 
+chapterListEndpoint =
+    "chapters?_format=json"
+
+
+chapterContentEndpoint =
+    "chapters"
