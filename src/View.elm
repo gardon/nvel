@@ -180,7 +180,7 @@ viewChapterListItem lang chapter =
         chapterNumber =
             "#" ++ String.fromInt chapter.index ++ ": "
     in
-    div [ class "chapter-list-item" ]
+    a [ href chapterPath, class "chapter-list-item" ]
         [ h2 [] [ a [ href chapterPath ] [ span [] [ text chapterNumber ], text chapter.title ] ]
         , div [ class "description" ] [ text chapter.field_description ]
         , viewImage [] chapter.thumbnail
