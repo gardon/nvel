@@ -15,7 +15,7 @@ type Msg
     | OnLocationChange Url.Url
     | ChangeLocation Browser.UrlRequest
     | Navbar NavbarAction
-    | ToggleZoomedImage String Int
+    | ToggleZoomedImage String Int Int
     --| ScrollTop (Result Dom.Error ())
     | LoadImage String Int
     | NoOp
