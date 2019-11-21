@@ -121,7 +121,12 @@ update msg model =
             case urlRequest of
                 Browser.Internal url ->
                   -- ( model, Cmd.batch [ Task.attempt ScrollTop (Dom.Scroll.toTop "scroll-top"), Nav.pushUrl model.key (Url.toString url) ] )
-                  ( model, Nav.pushUrl model.key (Url.toString url) )
+                  ( model
+                  , Cmd.batch
+                    [ Nav.pushUrl model.key (Url.toString url)
+                    , Task.attempt scrollZoomedImage (Dom.setViewport 0 0 )
+                    ]
+                  )
 
                 Browser.External href ->
                   ( model, Nav.load href )
