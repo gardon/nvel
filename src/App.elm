@@ -24,8 +24,11 @@ import Browser.Navigation as Nav
 import Routing exposing (parseLocation, routeContent)
 import Skeleton exposing (..)
 import Task
+import Browser.Dom as Dom
+import Result exposing (Result)
 import Url
 import View exposing (..)
+import Debug
 
 
 main : Program () Model Msg
@@ -154,8 +157,8 @@ update msg model =
             in
             ( { model | navbar = navbar }, Cmd.none )
 
-        ToggleZoomedImage chapter section ->
-            ( zoomImage model chapter section, Cmd.none )
+        ToggleZoomedImage chapter section x ->
+            ( zoomImage model chapter section, Task.attempt scrollZoomedImage (Dom.setViewportOf ("section-" ++ chapter ++ "-" ++ (String.fromInt section)) (toFloat x) 0 ) )
 
         NoOp ->
             ( model, Cmd.none )
@@ -204,6 +207,8 @@ lazyImage : { chapter : String, section : Int } -> Msg
 lazyImage record =
     LoadImage record.chapter record.section
 
-
+scrollZoomedImage : Result a b -> Msg
+scrollZoomedImage result =
+    NoOp
 
 -- HTTP

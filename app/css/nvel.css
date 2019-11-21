@@ -17,7 +17,8 @@ img.u-full-width {
   text-indent: -9999px;
   background-image: url(../images/loading.svg);
   background-repeat: no-repeat;
-  background-position: center;
+	background-position: center;
+	transition: 0.3s all;
 }
 
 @media (min-width: 550px) {
@@ -64,11 +65,15 @@ span.loading-icon {
 	background-color: #FAFAFA;
 	-webkit-transform: translate(0,-60px);
 	-webkit-transition: -webkit-transform .2s,background .3s,color .3s,opacity 0 .3s;
+	transform: translate(0,-60px);
+	transition: -webkit-transform .2s,background .3s,color .3s,opacity 0 .3s;
 }
 .navbar-container.sticky.show {
     opacity: 1;
     -webkit-transform: translate(0,0);
-    -webkit-transition: -webkit-transform .2s,background .3s,color .3s;
+		-webkit-transition: -webkit-transform .2s,background .3s,color .3s;
+		transform: translate(0,0);
+    transition: -webkit-transform .2s,background .3s,color .3s;
 }
 
 .empty-spacer {

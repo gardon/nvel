@@ -66,7 +66,7 @@ viewSection model =
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
-                    , onClick (Msgs.ToggleZoomedImage model.chapter model.id)
+                    , onClickZoom (Msgs.ToggleZoomedImage model.chapter model.id)
                     ]
                     model.image
                 ]
@@ -84,7 +84,7 @@ viewSection model =
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
-                    , onClick (Msgs.ToggleZoomedImage model.chapter model.id)
+                    , onClickZoom (Msgs.ToggleZoomedImage model.chapter model.id)
                     ]
                     model.image
                 ]

@@ -1,4 +1,4 @@
-module View.Attributes exposing (dataAttr, onLinkClick, sizes, srcset)
+module View.Attributes exposing (dataAttr, onLinkClick, sizes, srcset, onClickZoom)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -42,3 +42,11 @@ onLinkClick message =
             }
     in
     onClick message
+
+onClickZoom : (Int -> msg) -> Attribute msg
+onClickZoom x =
+    on "click" (Decode.map x xValue)
+
+xValue : Decode.Decoder Int
+xValue =
+    Decode.at ["x"] Decode.int
