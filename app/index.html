@@ -51,12 +51,14 @@
     </div>
     <script src="/main.js"></script>
     <script>
+      (function (scope) {
+          'use strict';
       var node = document.getElementById('main');
       var app = Elm.Main.init(node);
 
       app.ports.updatePageData.subscribe(function(pagedata) {
         //document.title = pagedata.title;
-        htmlEl = document.documentElement;
+        var htmlEl = document.documentElement;
         htmlEl.lang = pagedata.lang;
 
         if (dataLayer !== undefined) {
@@ -101,8 +103,8 @@
 
       function lazyLoad(scroll) {
         var images = document.querySelectorAll('.lazy-section.not-loaded');
-        for (i = 0; i < images.length; i++) {
-          image = images[i];
+        for (var i = 0; i < images.length; i++) {
+          var image = images[i];
           if (image.offsetTop < scroll + 1000) {
             var ids = image.id.split("-");
             app.ports.lazyLoad.send({chapter: ids[1], section: Number(ids[2])})
@@ -120,7 +122,7 @@
       function showNav() {
         app.ports.navBar.send(true);
       }
-
+      }(this));
     </script>
   </div>
 
