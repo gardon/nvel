@@ -16,9 +16,13 @@ switchBackend =
     backend
 
 
-getLanguage : Language
-getLanguage =
-    language
+getLanguage : Maybe Language -> Language
+getLanguage maybeLanguage =
+    case maybeLanguage of
+        Just lang ->
+            lang
+        Nothing ->
+            language
 
 
 siteInformation : SiteInformation

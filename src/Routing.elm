@@ -1,13 +1,14 @@
-module Routing exposing (matchers, parseLocation, routeContent)
+module Routing exposing (matchers, parseLocation, routeContent, parseLanguage)
 
 import Chapters.Chapter exposing (view)
 import Dict exposing (Dict)
 import Html exposing (Html, text)
-import Models exposing (ChapterId, MaybeAsset(..), Model, Route(..))
+import Models exposing (ChapterId, MaybeAsset(..), Model, Route(..), Language(..))
 import Msgs exposing (Msg)
 import Url.Parser exposing (..)
 import Url exposing (Url)
 import View exposing (templateChapter, templateHome, templatePages, viewAbout, viewChapterList, viewHome)
+import Language exposing (..)
 
 
 matchers : Parser (Route -> a) a
@@ -20,15 +21,34 @@ matchers =
         , map AboutRoute    (s "about")
         ]
 
+parseLanguage : Url -> Maybe Language
+parseLanguage location =
+    let parts = List.drop 1 <| String.split "/" location.path
+    in
+        case List.head parts of
+            Just part ->
+                Language.toLang part
+            Nothing ->
+                Nothing
+
+removeLanguage : Url -> Url
+removeLanguage location =
+    case parseLanguage location of
+      Just part ->
+        { location | path = Debug.log "updated" <| "/" ++ (String.join "/" <| List.drop 2 <| String.split "/" location.path) }
+      Nothing ->
+        location
 
 parseLocation : Url -> Route
-parseLocation location =
-    case parse matchers location of
-        Just route ->
-            route
+parseLocation lang_location =
+    let location = removeLanguage lang_location
+    in
+        case parse matchers location of
+            Just route ->
+                route
 
-        Nothing ->
-            NotFoundRoute
+            Nothing ->
+                NotFoundRoute
 
 
 routeContent : Model -> List (Html Msg)

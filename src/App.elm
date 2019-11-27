@@ -21,7 +21,7 @@ import Models exposing (..)
 import Msgs exposing (..)
 import Browser
 import Browser.Navigation as Nav
-import Routing exposing (parseLocation, routeContent)
+import Routing exposing (parseLocation, parseLanguage, routeContent)
 import Skeleton exposing (..)
 import Task
 import Browser.Dom as Dom
@@ -57,7 +57,7 @@ init flags location key =
             switchBackend
 
         lang =
-            Config.getLanguage
+            Config.getLanguage <| parseLanguage location
 
         pageData =
             { title = translate lang Loading, lang = Language.toString lang }

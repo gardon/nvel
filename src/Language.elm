@@ -1,4 +1,4 @@
-module Language exposing (toString, translate, translateMonth)
+module Language exposing (toString, toLang, translate, translateMonth)
 
 import Models exposing (..)
 import Time exposing (..)
@@ -19,6 +19,14 @@ toString lang =
         Pt_Br ->
             "pt-br"
 
+toLang : String -> Maybe Language
+toLang langcode =
+    if langcode == "en" then
+        Just En
+    else if langcode == "pt-br" then
+        Just Pt_Br
+    else
+        Nothing
 
 translate : Language -> Translator
 translate lang =
