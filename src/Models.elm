@@ -16,6 +16,7 @@ type alias Model =
     , route : Route
     , key: Key
     , language : Language
+    , languages : List Language
     , navbar : Bool
     , location : Url
     }

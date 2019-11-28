@@ -1,7 +1,8 @@
-module Language exposing (toString, toLang, translate, translateMonth)
+module Language exposing (toString, toLang, translate, translateMonth, localizePath, parseLanguage, removeLanguage)
 
 import Models exposing (..)
 import Time exposing (..)
+import Url exposing (..)
 
 
 type alias Translator =
@@ -161,3 +162,26 @@ translateMonthEn month =
       Oct -> "Oct"
       Nov -> "Nov"
       Dec -> "Dec"
+
+localizePath : Language -> String -> String
+localizePath lang path = "/" ++ toString lang ++ path
+
+
+parseLanguage : Url -> Maybe Language
+parseLanguage location =
+    let parts = List.drop 1 <| String.split "/" location.path
+    in
+        case List.head parts of
+            Just part ->
+                toLang part
+            Nothing ->
+                Nothing
+
+
+removeLanguage : Url -> Url
+removeLanguage location =
+    case parseLanguage location of
+      Just part ->
+        { location | path = Debug.log "updated" <| "/" ++ (String.join "/" <| List.drop 2 <| String.split "/" location.path) }
+      Nothing ->
+        location

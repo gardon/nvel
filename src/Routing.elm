@@ -1,4 +1,4 @@
-module Routing exposing (matchers, parseLocation, routeContent, parseLanguage)
+module Routing exposing (matchers, parseLocation, routeContent)
 
 import Chapters.Chapter exposing (view)
 import Dict exposing (Dict)
@@ -21,23 +21,6 @@ matchers =
         , map AboutRoute    (s "about")
         ]
 
-parseLanguage : Url -> Maybe Language
-parseLanguage location =
-    let parts = List.drop 1 <| String.split "/" location.path
-    in
-        case List.head parts of
-            Just part ->
-                Language.toLang part
-            Nothing ->
-                Nothing
-
-removeLanguage : Url -> Url
-removeLanguage location =
-    case parseLanguage location of
-      Just part ->
-        { location | path = Debug.log "updated" <| "/" ++ (String.join "/" <| List.drop 2 <| String.split "/" location.path) }
-      Nothing ->
-        location
 
 parseLocation : Url -> Route
 parseLocation lang_location =

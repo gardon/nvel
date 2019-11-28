@@ -1,4 +1,4 @@
-module Config exposing (chapterData, getChapterFromId, getLanguage, getSiteInformation, pageData, siteInformation, switchBackend)
+module Config exposing (chapterData, getChapterFromId, getLanguage, getLanguages, getSiteInformation, pageData, siteInformation, switchBackend)
 
 import Config.Environment exposing (..)
 import Config.Site exposing (..)
@@ -23,6 +23,10 @@ getLanguage maybeLanguage =
             lang
         Nothing ->
             language
+
+getLanguages : List Language
+getLanguages =
+    Config.Site.languages
 
 
 siteInformation : SiteInformation
