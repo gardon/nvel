@@ -366,11 +366,12 @@ viewLanguageSwitcher model =
 viewLanguageSwitcherLink : Model -> Language -> Html Msg
 viewLanguageSwitcherLink model lang =
     let originalLocation = removeLanguage model.location
+        langcode = Language.toString lang
     in
         if model.language == lang then
             text ""
         else
-            li [] [ a [href (localizePath lang originalLocation.path)] [ text <| Language.toString lang ] ]
+            li [ hreflang langcode ] [ a [ href (localizePath lang originalLocation.path), hreflang langcode ] [ text langcode ] ]
 
 
 viewChapterNavigation : Language -> List Chapter -> Chapter -> List Chapter -> Html Msg
@@ -454,7 +455,7 @@ templateHome : Model -> List (Html Msg) -> List (Html Msg)
 templateHome model content =
     [ div [ class "container navbar-container" ]
         [ viewMenu model model.menu
-        , viewSocialLinks model
+        , viewLanguageSwitcher model
         ]
     , div [ class "container title-container" ]
         [ viewTitle model
@@ -471,7 +472,7 @@ templatePages : Model -> List (Html Msg) -> List (Html Msg)
 templatePages model content =
     [ div [ class "container navbar-container" ]
         [ viewMenu model model.menu
-        , viewSocialLinks model
+        , viewLanguageSwitcher model
         ]
     , div [ class "container title-container" ]
         [ viewTitle model

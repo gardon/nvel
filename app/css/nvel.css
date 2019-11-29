@@ -86,18 +86,26 @@ span.loading-icon {
 }
 
 ul.navbar-list,
-ul.social-links {
+ul.social-links,
+ul.language-switcher {
 	list-style: none;
 	margin: 0;
 }
 
 ul.navbar-list li,
-ul.social-links li {
+ul.social-links li,
+ul.language-switcher li {
 	display: inline;
 	margin: 0 2em 0 0;
 }
 
-ul.navbar-list li a {
+ul.social-links li:last-child,
+ul.language-switcher li:last-child {
+	margin-right: 0;
+}
+
+ul.navbar-list li a,
+ul.language-switcher li a {
 	text-decoration: none;
 	text-transform: uppercase;
 	color: #777;
@@ -105,7 +113,8 @@ ul.navbar-list li a {
 }
 
 @media (min-width: 750px) {
-	ul.navbar-list li a {
+	ul.navbar-list li a,
+  ul.language-switcher li a {
 		font-size:1em;
 	}
 }
@@ -126,7 +135,8 @@ ul.navbar-list li.active a:hover {
 }
 
 
-ul.social-links {
+ul.social-links,
+ul.language-switcher {
 	position: absolute;
 	right: 0;
 	top: 0.5em;

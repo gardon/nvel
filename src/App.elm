@@ -154,8 +154,10 @@ update msg model =
                     else
                         getSiteInformation  updatedModel
 
+                chapters =  if newlang == model.language then model.chapters else Nothing
+
                 newmodel =
-                    { model | route = newRoute, language = newlang, location = newlocation }
+                    { model | chapters = chapters, route = newRoute, language = newlang, location = newlocation }
 
                 updatedModel =
                     { newmodel | pageData = pageData newmodel }
