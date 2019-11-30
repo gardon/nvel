@@ -97,7 +97,7 @@ getSiteInformation : Model -> Cmd Msg
 getSiteInformation model =
     let
         url =
-            model.backendConfig.backendURL ++ siteInformationEndpoint
+            model.backendConfig.backendURL ++ Language.toString model.language ++ "/" ++ siteInformationEndpoint
     in
         Http.get
             { url = url

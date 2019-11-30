@@ -152,7 +152,7 @@ update msg model =
                     if newlang == model.language then
                         updatePageData updatedModel.pageData
                     else
-                        getSiteInformation  updatedModel
+                        getSiteInformation updatedModel
 
                 chapters =  if newlang == model.language then model.chapters else Nothing
 
