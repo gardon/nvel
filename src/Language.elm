@@ -182,6 +182,6 @@ removeLanguage : Url -> Url
 removeLanguage location =
     case parseLanguage location of
       Just part ->
-        { location | path = Debug.log "updated" <| "/" ++ (String.join "/" <| List.drop 2 <| String.split "/" location.path) }
+        { location | path = "/" ++ (String.join "/" <| List.drop 2 <| String.split "/" location.path) }
       Nothing ->
         location
