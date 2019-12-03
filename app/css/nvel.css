@@ -89,7 +89,13 @@ ul.navbar-list,
 ul.social-links,
 ul.language-switcher {
 	list-style: none;
-	margin: 0;
+	margin: 0 1em 0 0;
+}
+
+@media (min-width: 400px) {
+	ul.language-switcher {
+		margin-right: 0;
+	}
 }
 
 ul.navbar-list li,
