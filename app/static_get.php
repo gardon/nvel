@@ -45,7 +45,7 @@ function parse_path($query) {
     list(, $path) = $matches;
     $prefix = explode('/', str_replace($path, '', $query));
     if (count($prefix) == 1 || (count($prefix) == 2 && empty($prefix[1]))) {
-      $lang = $prefix[0];
+      $lang = preg_replace('@[^a-z\-]@', '', $prefix[0]);
       return [$lang, $path];
     }
     return FALSE;
@@ -70,9 +70,11 @@ function test_parse_path() {
     'user/login' => FALSE,
     // any loose string is parsed as a language.
     'something' => ['something', ''],
+    // because we don't validate language, should then filter out special chars.
+    'some!@#34?="specialstring"<a href=' => ['somespecialstringahref', '' ],
+    'some!@#34?="specialstring"<a href=/chapters' => ['somespecialstringahref', 'chapters' ],
   ];
   foreach ($test as $input => $result) {
-    //list($a, $b) = parse_path($input);
     if (parse_path($input) == $result) {
       print "Passed.\n";
     }
