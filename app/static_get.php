@@ -21,8 +21,8 @@ switch ($path[0]) {
       $url = $config['backend_url'] . $lang;
       break;
     }
-    elseif (count($path) == 2 && is_numeric($path[1])) {
-      $url = $config['backend_url'] . $lang . '/node/' . $path[1];
+    elseif (count($path) == 2 && $path[1]) {
+      $url = $config['backend_url'] . $lang . '/chapters/' . $path[1];
       break;
     }
     // Intentionally fallback to default fom here
@@ -41,7 +41,7 @@ function redirect($url) {
 
 function parse_path($query) {
   $matches = [];
-  if (preg_match('#(|index|about|chapters(?:/[0-9]+)?)/?$#', $query, $matches)) {
+  if (preg_match('#(|index|about|chapters(?:/[0-9a-z\-]+)?)/?$#', $query, $matches)) {
     list(, $path) = $matches;
     $prefix = explode('/', str_replace($path, '', $query));
     if (count($prefix) == 1 || (count($prefix) == 2 && empty($prefix[1]))) {
@@ -63,6 +63,10 @@ function test_parse_path() {
     'chapters' => ['', 'chapters'],
     'en/about' => ['en', 'about'],
     'pt-br/chapters/4' => ['pt-br', 'chapters/4'],
+    'pt-br/chapters/4-fuga' => ['pt-br', 'chapters/4-fuga'],
+    'en/chapters/5-another' => ['en', 'chapters/5-another'],
+    'en/chapters/5-another/invalid' => FALSE,
+    'en/chapters/5-another_invalid' => FALSE,
     'chapters/94' => ['', 'chapters/94'],
     'en/other/' => FALSE,
     'pt-br/about/us' => FALSE,

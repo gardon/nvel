@@ -33,10 +33,10 @@ replaceChapter : Model -> Chapter -> Model
 replaceChapter model newchapter =
     case model.chapters of
         Nothing ->
-            { model | chapters = Just (Dict.singleton newchapter.nid newchapter) }
+            { model | chapters = Just (Dict.singleton newchapter.path newchapter) }
 
         Just chapters ->
-            { model | chapters = Just (Dict.insert newchapter.nid newchapter chapters) }
+            { model | chapters = Just (Dict.insert newchapter.path newchapter chapters) }
 
 
 viewChapter : Chapter -> Html Msg
@@ -62,7 +62,7 @@ viewSection model =
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            skeletonRow [ classList classes, "section-" ++ model.chapter ++ "-" ++ String.fromInt model.id |> id ]
+            skeletonRow [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -80,7 +80,7 @@ viewSection model =
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            skeletonRowFullWidth [ classList classes, "section-" ++ model.chapter ++ "-" ++ String.fromInt model.id |> id ]
+            skeletonRowFullWidth [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -101,7 +101,7 @@ viewSection model =
                     ]
 
                 elementid =
-                    "section-" ++ model.chapter ++ "-" ++ String.fromInt model.id
+                    "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id
             in
             skeletonRow [ classList classes, id elementid ]
                 [ viewImage [] model.image

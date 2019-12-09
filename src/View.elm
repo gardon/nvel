@@ -108,7 +108,7 @@ viewChapterFeatured : Language -> Phrase -> String -> Chapter -> Html Msg
 viewChapterFeatured lang caption_phrase featured_class chapter =
     let
         chapterPath =
-            "/chapters/" ++ chapter.nid
+            "/chapters/" ++ chapter.path
             |> localizePath lang
 
         chapterNumber =
@@ -176,7 +176,7 @@ viewChapterListItem : Language -> Chapter -> Html Msg
 viewChapterListItem lang chapter =
     let
         chapterPath =
-            "/chapters/" ++ chapter.nid
+            "/chapters/" ++ chapter.path
             |> localizePath lang
 
         chapterNumber =
@@ -387,7 +387,7 @@ viewChapterNavItem : Language -> Chapter -> Html Msg
 viewChapterNavItem lang chapter =
     let
         chapterPath =
-            "/chapters/" ++ chapter.nid
+            "/chapters/" ++ chapter.path
             |> localizePath lang
 
         chapterText =

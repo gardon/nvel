@@ -106,7 +106,7 @@
         for (var i = 0; i < images.length; i++) {
           var image = images[i];
           if (image.offsetTop < scroll + 1000) {
-            var ids = image.id.split("-");
+            var ids = image.id.split(":");
             app.ports.lazyLoad.send({chapter: ids[1], section: Number(ids[2])})
           }
         }
