@@ -197,12 +197,7 @@ viewImage attributes image =
 
     else
         let
-            newattributes =
-                if image.load then
-                    attributes ++ [ src image.uri ]
-
-                else
-                    attributes
+            newattributes = attributes ++ [ src image.uri ]
         in
         img
             (newattributes

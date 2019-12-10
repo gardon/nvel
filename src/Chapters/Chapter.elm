@@ -4,6 +4,7 @@ import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Html.Lazy exposing (..)
 import Markdown
 import Models exposing (..)
 import Msgs exposing (Msg)
@@ -57,12 +58,11 @@ viewSection model =
             let
                 classes =
                     [ ( "section-single-image", True )
-                    , ( "lazy-section", True )
                     , ( "zoomed", model.zoomed )
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            skeletonRow [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
+            lazy2 skeletonRow [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -75,12 +75,11 @@ viewSection model =
             let
                 classes =
                     [ ( "section-full-width-image", True )
-                    , ( "lazy-section", True )
                     , ( "zoomed", model.zoomed )
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            skeletonRowFullWidth [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
+            lazy2 skeletonRowFullWidth [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -96,14 +95,13 @@ viewSection model =
             let
                 classes =
                     [ ( "section-title", True )
-                    , ( "lazy-section", True )
                     , ( "not-loaded", not model.image.load )
                     ]
 
                 elementid =
                     "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id
             in
-            skeletonRow [ classList classes, id elementid ]
+            lazy2 skeletonRow [ classList classes, id elementid ]
                 [ viewImage [] model.image
                 , h2 [ class "chapter-title" ] [ text features.title ]
                 , h3 [ class "author" ] [ text features.author ]
