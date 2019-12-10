@@ -8,7 +8,7 @@ import List exposing (..)
 import Models exposing (..)
 import Msgs exposing (..)
 import Resources exposing (..)
-
+import Language exposing (..)
 
 
 -- Http
@@ -18,7 +18,7 @@ getChapters : Model -> Cmd Msg
 getChapters model =
     let
         url =
-            model.backendConfig.backendURL ++ chapterListEndpoint
+            model.backendConfig.backendURL ++ Language.toString model.language ++ "/" ++ chapterListEndpoint
     in
         Http.get
             { url = url
@@ -55,6 +55,7 @@ chapterDecoder =
         |> required "authors" (Decode.list Decode.string)
         |> required "publication_date_unix" dateDecoder
         |> required "featured_image" imageDecoder
+        |> required "path" Decode.string
 
 
 decodeChapters : Decode.Decoder (Dict String Chapter)

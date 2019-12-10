@@ -57,7 +57,10 @@ init flags location key =
             switchBackend
 
         lang =
-            Config.getLanguage
+            Config.getLanguage <| parseLanguage location
+
+        langs =
+            Config.getLanguages
 
         pageData =
             { title = translate lang Loading, lang = Language.toString lang }
@@ -69,7 +72,7 @@ init flags location key =
             parseLocation location
 
         model =
-            Model chapters siteInformation pageData backendConfig menu route key lang True location
+            Model chapters siteInformation pageData backendConfig menu route key lang langs True location
     in
     ( model, getSiteInformation model )
 
@@ -137,18 +140,34 @@ update msg model =
         -- ScrollTop (Err x) ->
         --     ( model, Cmd.none )
 
-        OnLocationChange location ->
+        OnLocationChange newlocation ->
             let
                 newRoute =
-                    parseLocation location
+                    parseLocation newlocation
+
+                newlang =
+                    Config.getLanguage <| parseLanguage newlocation
+
+                cmd =
+                    if newlang == model.language then
+                        updatePageData updatedModel.pageData
+                    else
+                        getSiteInformation updatedModel
+
+                chapters =  if newlang == model.language then model.chapters else Nothing
 
                 newmodel =
-                    { model | route = newRoute, location = location }
+                    { model | chapters = chapters, route = newRoute, language = newlang, location = newlocation }
 
                 updatedModel =
                     { newmodel | pageData = pageData newmodel }
             in
-            ( updatedModel, Cmd.batch [ updatePageData updatedModel.pageData, pageChange () ] )
+                ( updatedModel
+                , Cmd.batch
+                    [ cmd
+                    , pageChange ()
+                    ]
+                )
 
         Navbar action ->
             let

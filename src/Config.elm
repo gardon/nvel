@@ -1,4 +1,4 @@
-module Config exposing (chapterData, getChapterFromId, getLanguage, getSiteInformation, pageData, siteInformation, switchBackend)
+module Config exposing (chapterData, getChapterFromId, getLanguage, getLanguages, getSiteInformation, pageData, siteInformation, switchBackend)
 
 import Config.Environment exposing (..)
 import Config.Site exposing (..)
@@ -16,9 +16,17 @@ switchBackend =
     backend
 
 
-getLanguage : Language
-getLanguage =
-    language
+getLanguage : Maybe Language -> Language
+getLanguage maybeLanguage =
+    case maybeLanguage of
+        Just lang ->
+            lang
+        Nothing ->
+            language
+
+getLanguages : List Language
+getLanguages =
+    Config.Site.languages
 
 
 siteInformation : SiteInformation
@@ -89,7 +97,7 @@ getSiteInformation : Model -> Cmd Msg
 getSiteInformation model =
     let
         url =
-            model.backendConfig.backendURL ++ siteInformationEndpoint
+            model.backendConfig.backendURL ++ Language.toString model.language ++ "/" ++ siteInformationEndpoint
     in
         Http.get
             { url = url

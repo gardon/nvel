@@ -6,7 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Image exposing (Derivative, Image)
-import Language exposing (translate, translateMonth)
+import Language exposing (translate, translateMonth, localizePath, removeLanguage)
 import Markdown
 import Menu exposing (..)
 import Models exposing (..)
@@ -54,7 +54,7 @@ viewHome model =
                 secondrow =
                     skeletonRow [ class "center chapters-button" ]
                         [ translate lang ListAllChapters
-                            |> linkButtonBig "chapters"
+                            |> linkButtonBig (localizePath model.language "/chapters")
                         ]
 
                 thirdrow =
@@ -108,7 +108,8 @@ viewChapterFeatured : Language -> Phrase -> String -> Chapter -> Html Msg
 viewChapterFeatured lang caption_phrase featured_class chapter =
     let
         chapterPath =
-            "/chapters/" ++ chapter.nid
+            "/chapters/" ++ chapter.path
+            |> localizePath lang
 
         chapterNumber =
             "#" ++ String.fromInt chapter.index ++ " "
@@ -175,7 +176,8 @@ viewChapterListItem : Language -> Chapter -> Html Msg
 viewChapterListItem lang chapter =
     let
         chapterPath =
-            "/chapters/" ++ chapter.nid
+            "/chapters/" ++ chapter.path
+            |> localizePath lang
 
         chapterNumber =
             "#" ++ String.fromInt chapter.index ++ ": "
@@ -230,9 +232,10 @@ viewMenuItem model item =
 
             else
                 ""
+        itemPath = localizePath model.language item.path
     in
     li [ class "navbar-item", class activeclass ]
-        [ a [ href item.path, class "navbar-link" ] [ text (translate model.language item.title) ]
+        [ a [ href itemPath, class "navbar-link" ] [ text (translate model.language item.title) ]
         ]
 
 
@@ -346,29 +349,46 @@ viewChapterNavbar model chapter =
                             else
                                 next
                     in
-                    viewChapterNavigation previous_crop chapter next_crop
+                    viewChapterNavigation lang previous_crop chapter next_crop
     in
     [ div [ class "index-icon" ]
-        [ a [ href "/chapters" ] [ viewIndexIcon, text "Index" ]
+        [ a [ href <| localizePath lang "/chapters" ] [ viewIndexIcon, text "Index" ]
         ]
     , chapterNavigation
+    , viewLanguageSwitcher model
     ]
 
+viewLanguageSwitcher : Model -> Html Msg
+viewLanguageSwitcher model =
+    List.map (viewLanguageSwitcherLink model) model.languages
+    |> ul [ class "language-switcher" ]
 
-viewChapterNavigation : List Chapter -> Chapter -> List Chapter -> Html Msg
-viewChapterNavigation previous current next =
+viewLanguageSwitcherLink : Model -> Language -> Html Msg
+viewLanguageSwitcherLink model lang =
+    let originalLocation = removeLanguage model.location
+        langcode = Language.toString lang
+    in
+        if model.language == lang then
+            text ""
+        else
+            li [ hreflang langcode ] [ a [ href (localizePath lang originalLocation.path), hreflang langcode ] [ text langcode ] ]
+
+
+viewChapterNavigation : Language -> List Chapter -> Chapter -> List Chapter -> Html Msg
+viewChapterNavigation lang previous current next =
     div [ class "chapter-navigation" ]
-        [ ul [ class "previous" ] (List.map viewChapterNavItem previous)
-        , ul [ class "current" ] [ viewChapterNavItem current ]
-        , ul [ class "next" ] (List.map viewChapterNavItem next)
+        [ ul [ class "previous" ] (List.map (viewChapterNavItem lang) previous)
+        , ul [ class "current" ] [ viewChapterNavItem lang current ]
+        , ul [ class "next" ] (List.map (viewChapterNavItem lang) next)
         ]
 
 
-viewChapterNavItem : Chapter -> Html Msg
-viewChapterNavItem chapter =
+viewChapterNavItem : Language -> Chapter -> Html Msg
+viewChapterNavItem lang chapter =
     let
         chapterPath =
-            "/chapters/" ++ chapter.nid
+            "/chapters/" ++ chapter.path
+            |> localizePath lang
 
         chapterText =
             "#" ++ String.fromInt chapter.index
@@ -435,7 +455,7 @@ templateHome : Model -> List (Html Msg) -> List (Html Msg)
 templateHome model content =
     [ div [ class "container navbar-container" ]
         [ viewMenu model model.menu
-        , viewSocialLinks model
+        , viewLanguageSwitcher model
         ]
     , div [ class "container title-container" ]
         [ viewTitle model
@@ -452,7 +472,7 @@ templatePages : Model -> List (Html Msg) -> List (Html Msg)
 templatePages model content =
     [ div [ class "container navbar-container" ]
         [ viewMenu model model.menu
-        , viewSocialLinks model
+        , viewLanguageSwitcher model
         ]
     , div [ class "container title-container" ]
         [ viewTitle model

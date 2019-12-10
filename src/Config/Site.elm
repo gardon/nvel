@@ -1,4 +1,4 @@
-module Config.Site exposing (aboutData, chaptersListData, homeData, language, notFoundData, siteInformation)
+module Config.Site exposing (aboutData, chaptersListData, homeData, language, languages, notFoundData, siteInformation)
 
 import Language exposing (..)
 import Models exposing (..)
@@ -50,3 +50,7 @@ notFoundData lang =
 language : Language
 language =
     Pt_Br
+
+languages : List Language
+languages =
+    [ Pt_Br, En ]
