@@ -89,6 +89,12 @@ translatePtBr phrase =
         NextChapter ->
             "Continue lendo..."
 
+        Next ->
+            "Próximo"
+
+        Previous ->
+            "Anterior"
+
 translateMonthPtBr : MonthTranslator
 translateMonthPtBr month =
     case month of
@@ -146,6 +152,12 @@ translateEn phrase =
 
         NextChapter ->
             "Keep Reading"
+
+        Next ->
+            "Next"
+
+        Previous ->
+            "Previous"
 
 translateMonthEn : MonthTranslator
 translateMonthEn month =

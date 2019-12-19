@@ -549,6 +549,13 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 	overflow: hidden;
 }
 
+.chapter-navigation ul.previous li a,
+.chapter-navigation ul.next li a {
+	background-color: rgba(255,255,255,0.9);
+	color: #777777;
+	font-size: 20px;
+}
+
 .chapter-navigation ul.current li {
 	border-color: #333;
 	border-style: solid;

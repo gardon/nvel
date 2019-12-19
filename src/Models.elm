@@ -135,6 +135,8 @@ type Phrase
     | Loading
     | NotFound
     | NextChapter
+    | Next
+    | Previous
 
 
 type NavbarAction

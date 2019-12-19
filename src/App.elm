@@ -28,7 +28,6 @@ import Browser.Dom as Dom
 import Result exposing (Result)
 import Url
 import View exposing (..)
-import Debug
 
 
 main : Program () Model Msg
