@@ -623,6 +623,10 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 	padding: 0 5px;
 }
 
+.section-folded-image img.u-full-width {
+	max-height: 200vh;
+}
+
 .zoomed {
 	overflow-x: scroll;
 }

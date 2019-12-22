@@ -88,6 +88,23 @@ viewSection model =
                     model.image
                 ]
 
+        FoldedImage ->
+            let
+                classes =
+                    [ ( "section-folded-image", True )
+                    , ( "zoomed", model.zoomed )
+                    , ( "not-loaded", not model.image.load )
+                    ]
+            in
+            lazy2 skeletonRowFullWidth [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
+                [ viewImage
+                    [ class "u-full-width"
+                    , sizes [ "100w" ]
+                    , onClickZoom (Msgs.ToggleZoomedImage model.chapter model.id)
+                    ]
+                    model.image
+                ]
+
         Spacer ->
             skeletonRowFullWidth [ class "section-spacer" ] []
 

@@ -56,6 +56,9 @@ decodeSection sectionType =
         "single_panel" ->
             decodeSingleImageSection
 
+        "folded_image" ->
+            decodeFoldedImageSection
+
         "spacer" ->
             decodeSpacer
 
@@ -88,6 +91,15 @@ decodeSingleImageSection =
         |> required "id" Decode.int
         |> hardcoded False
 
+
+decodeFoldedImageSection : Decode.Decoder Section
+decodeFoldedImageSection =
+    Decode.succeed Section
+        |> hardcoded FoldedImage
+        |> required "image" imageDecoder
+        |> required "chapter" Decode.string
+        |> required "id" Decode.int
+        |> hardcoded False
 
 decodeSpacer : Decode.Decoder Section
 decodeSpacer =
