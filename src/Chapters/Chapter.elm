@@ -1,4 +1,4 @@
-module Chapters.Chapter exposing (replaceChapter, view, viewChapter, viewChapterContent, viewSection)
+module Chapters.Chapter exposing (replaceChapter, view, viewChapter, viewChapterContent, viewSection, sectionId)
 
 import Dict exposing (Dict)
 import Html exposing (..)
@@ -62,7 +62,7 @@ viewSection model =
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            lazy2 skeletonRow [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
+            lazy2 skeletonRow [ classList classes, sectionId model.chapter model.id |> id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -79,7 +79,7 @@ viewSection model =
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            lazy2 skeletonRowFullWidth [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
+            lazy2 skeletonRowFullWidth [ classList classes, sectionId model.chapter model.id |> id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -96,7 +96,7 @@ viewSection model =
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            lazy2 skeletonRowFullWidth [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
+            lazy2 skeletonRowFullWidth [ classList classes, sectionId model.chapter model.id |> id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -116,7 +116,7 @@ viewSection model =
                     ]
 
                 elementid =
-                    "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id
+                    sectionId model.chapter model.id
             in
             lazy2 skeletonRow [ classList classes, id elementid ]
                 [ viewImage [] model.image
@@ -130,3 +130,7 @@ viewSection model =
             skeletonRow [ class "section-text" ]
                 [ Markdown.toHtmlWith markdownOptions [ class "text-content" ] text
                 ]
+
+sectionId : String -> Int -> String
+sectionId chapter section =
+    "section:" ++ chapter ++ ":" ++ String.fromInt section
