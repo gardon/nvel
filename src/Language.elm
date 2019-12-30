@@ -95,6 +95,9 @@ translatePtBr phrase =
         Previous ->
             "Anterior"
 
+        ZoomInstructions ->
+            "Toque nas imagens para aproximar"
+
 translateMonthPtBr : MonthTranslator
 translateMonthPtBr month =
     case month of
@@ -158,6 +161,9 @@ translateEn phrase =
 
         Previous ->
             "Previous"
+
+        ZoomInstructions ->
+            "Touch the images to zoom"
 
 translateMonthEn : MonthTranslator
 translateMonthEn month =

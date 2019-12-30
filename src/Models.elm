@@ -138,6 +138,7 @@ type Phrase
     | NextChapter
     | Next
     | Previous
+    | ZoomInstructions
 
 
 type NavbarAction

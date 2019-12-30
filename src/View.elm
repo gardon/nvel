@@ -543,6 +543,6 @@ templateChapter model chapter content =
                 [ viewSocialLinks model
                 ]
            , div [ class "mobile-tips" ]
-                [ text "Toque nas imagens para aproximar"
+                [ text <| translate model.language ZoomInstructions
                 ]
            ]
