@@ -1,9 +1,11 @@
-module Chapters.Chapter exposing (replaceChapter, view, viewChapter, viewChapterContent, viewSection)
+module Chapters.Chapter exposing (replaceChapter, view, viewChapter, viewChapterContent, viewSection, sectionId)
 
 import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Html.Lazy exposing (..)
+import Html.Keyed
 import Markdown
 import Models exposing (..)
 import Msgs exposing (Msg)
@@ -41,28 +43,28 @@ replaceChapter model newchapter =
 
 viewChapter : Chapter -> Html Msg
 viewChapter chapter =
-    List.append [ h1 [ class "chapter-title hidden" ] [ text chapter.title ] ] (viewChapterContent chapter.content)
-        |> div []
+    List.append [ ("chapter_title", h1 [ class "chapter-title hidden" ] [ text chapter.title ]) ] (viewChapterContent chapter.content)
+        |> Html.Keyed.node "div" []
 
 
-viewChapterContent : List Section -> List (Html Msg)
+viewChapterContent : List Section -> List (String, Html Msg)
 viewChapterContent model =
     List.map viewSection model
 
 
-viewSection : Section -> Html Msg
+viewSection : Section -> (String, Html Msg)
 viewSection model =
+    let  section_id = sectionId model.chapter model.id in
     case model.sectionType of
         SingleImage ->
             let
                 classes =
                     [ ( "section-single-image", True )
-                    , ( "lazy-section", True )
                     , ( "zoomed", model.zoomed )
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            skeletonRow [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
+            (section_id, lazy2 skeletonRow [ classList classes, id section_id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -70,17 +72,17 @@ viewSection model =
                     ]
                     model.image
                 ]
+            )
 
         FullWidthSingleImage ->
             let
                 classes =
                     [ ( "section-full-width-image", True )
-                    , ( "lazy-section", True )
                     , ( "zoomed", model.zoomed )
                     , ( "not-loaded", not model.image.load )
                     ]
             in
-            skeletonRowFullWidth [ classList classes, "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id |> id ]
+            (section_id, lazy2 skeletonRowFullWidth [ classList classes, id section_id ]
                 [ viewImage
                     [ class "u-full-width"
                     , sizes [ "100w" ]
@@ -88,30 +90,50 @@ viewSection model =
                     ]
                     model.image
                 ]
+            )
+        FoldedImage ->
+            let
+                classes =
+                    [ ( "section-folded-image", True )
+                    , ( "zoomed", model.zoomed )
+                    , ( "not-loaded", not model.image.load )
+                    ]
+            in
+            (section_id, lazy2 skeletonRowFullWidth [ classList classes, id section_id ]
+                [ viewImage
+                    [ class "u-full-width"
+                    , sizes [ "100w" ]
+                    , onClickZoom (Msgs.ToggleZoomedImage model.chapter model.id)
+                    ]
+                    model.image
+                ]
+            )
 
         Spacer ->
-            skeletonRowFullWidth [ class "section-spacer" ] []
+            (section_id, skeletonRowFullWidth [ class "section-spacer" ] [])
 
         TitlePanel features ->
             let
                 classes =
                     [ ( "section-title", True )
-                    , ( "lazy-section", True )
                     , ( "not-loaded", not model.image.load )
                     ]
-
-                elementid =
-                    "section:" ++ model.chapter ++ ":" ++ String.fromInt model.id
             in
-            skeletonRow [ classList classes, id elementid ]
+            (section_id, lazy2 skeletonRow [ classList classes, id section_id ]
                 [ viewImage [] model.image
                 , h2 [ class "chapter-title" ] [ text features.title ]
                 , h3 [ class "author" ] [ text features.author ]
                 , Markdown.toHtmlWith markdownOptions [ class "extra" ] features.extra
                 , div [ class "copyright" ] [ text features.copyright ]
                 ]
+            )
 
         Text text ->
-            skeletonRow [ class "section-text" ]
+            (section_id, skeletonRow [ class "section-text" ]
                 [ Markdown.toHtmlWith markdownOptions [ class "text-content" ] text
                 ]
+            )
+
+sectionId : String -> Int -> String
+sectionId chapter section =
+    "section:" ++ chapter ++ ":" ++ String.fromInt section

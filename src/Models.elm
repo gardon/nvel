@@ -52,6 +52,7 @@ type MaybeAsset a
 type SectionType
     = SingleImage
     | FullWidthSingleImage
+    | FoldedImage
     | TitlePanel TitlePanelFeatures
     | Spacer
     | Text String
@@ -135,6 +136,8 @@ type Phrase
     | Loading
     | NotFound
     | NextChapter
+    | Next
+    | Previous
 
 
 type NavbarAction

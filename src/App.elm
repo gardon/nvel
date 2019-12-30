@@ -5,7 +5,7 @@
 port module Main exposing (init, lazyImage, lazyLoad, main, navBar, pageChange, renderSocialMedia, subscriptions, toggleNavbar, update, updatePageData, view)
 
 import Chapters exposing (..)
-import Chapters.Chapter
+import Chapters.Chapter exposing (sectionId)
 import Config exposing (..)
 import Debug exposing (..)
 import Html exposing (..)
@@ -28,7 +28,6 @@ import Browser.Dom as Dom
 import Result exposing (Result)
 import Url
 import View exposing (..)
-import Debug
 
 
 main : Program () Model Msg
@@ -182,7 +181,7 @@ update msg model =
             ( { model | navbar = navbar }, Cmd.none )
 
         ToggleZoomedImage chapter section x ->
-            ( zoomImage model chapter section, Task.attempt scrollZoomedImage (Dom.setViewportOf ("section-" ++ chapter ++ "-" ++ (String.fromInt section)) (toFloat x) 0 ) )
+            ( zoomImage model chapter section, Task.attempt scrollZoomedImage (Dom.setViewportOf (sectionId chapter section) (toFloat x) 0 ) )
 
         NoOp ->
             ( model, Cmd.none )

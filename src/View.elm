@@ -197,12 +197,7 @@ viewImage attributes image =
 
     else
         let
-            newattributes =
-                if image.load then
-                    attributes ++ [ src image.uri ]
-
-                else
-                    attributes
+            newattributes = attributes ++ [ src image.uri ]
         in
         img
             (newattributes
@@ -331,25 +326,15 @@ viewChapterNavbar model chapter =
 
                         previous =
                             List.take (index - 1) list
+                                |> List.reverse
+                                |> List.head
 
                         next =
                             List.drop index list
+                                |> List.head
 
-                        previous_crop =
-                            if List.length previous > 1 then
-                                List.drop (List.length previous - 1) previous
-
-                            else
-                                previous
-
-                        next_crop =
-                            if List.length next > 1 then
-                                List.take 1 next
-
-                            else
-                                next
                     in
-                    viewChapterNavigation lang previous_crop chapter next_crop
+                    viewChapterNavigation lang previous chapter next
     in
     [ div [ class "index-icon" ]
         [ a [ href <| localizePath lang "/chapters" ] [ viewIndexIcon, text "Index" ]
@@ -374,29 +359,39 @@ viewLanguageSwitcherLink model lang =
             li [ hreflang langcode ] [ a [ href (localizePath lang originalLocation.path), hreflang langcode ] [ text langcode ] ]
 
 
-viewChapterNavigation : Language -> List Chapter -> Chapter -> List Chapter -> Html Msg
+viewChapterNavigation : Language -> Maybe Chapter -> Chapter -> Maybe Chapter -> Html Msg
 viewChapterNavigation lang previous current next =
     div [ class "chapter-navigation" ]
-        [ ul [ class "previous" ] (List.map (viewChapterNavItem lang) previous)
-        , ul [ class "current" ] [ viewChapterNavItem lang current ]
-        , ul [ class "next" ] (List.map (viewChapterNavItem lang) next)
+        [ ul [ class "previous" ]
+            (case previous of
+                Just previousChapter ->
+                    [ viewChapterNavItem lang previousChapter "«" <| translate lang Previous ]
+                Nothing ->
+                    []
+            )
+        , ul [ class "current" ] [ viewChapterNavItem lang current ("#" ++ String.fromInt current.index) current.title]
+        , ul [ class "next" ]
+            (case next of
+                Just nextChapter ->
+                    [ viewChapterNavItem lang nextChapter "»" <| translate lang Next ]
+                Nothing ->
+                    []
+            )
         ]
 
 
-viewChapterNavItem : Language -> Chapter -> Html Msg
-viewChapterNavItem lang chapter =
+viewChapterNavItem : Language -> Chapter -> String -> String -> Html Msg
+viewChapterNavItem lang chapter linkText title =
     let
         chapterPath =
             "/chapters/" ++ chapter.path
             |> localizePath lang
 
-        chapterText =
-            "#" ++ String.fromInt chapter.index
     in
     li [ style "background-image" ("url(" ++ chapter.featured_image.uri ++ ")") ]
         [ a [ href chapterPath ]
-            [ text chapterText
-            , span [ class "chapter-title" ] [ text (": " ++ chapter.title) ]
+            [ text linkText
+            , span [ class "chapter-title" ] [ text (": " ++ title) ]
             ]
         ]
 
