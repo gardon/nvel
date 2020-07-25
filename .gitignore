@@ -2,12 +2,12 @@
 /bin
 
 .idea/
-docker-compose.yml
-docroot/sites/*/settings.local.php
-docroot/sites/*/files
 elm-stuff/
 node_modules/
 
 # Ignore built files
 app/main.js*
 app/css/nvel.css.gz
+
+# Ignore Environment settings
+src/Config/Environment.elm
