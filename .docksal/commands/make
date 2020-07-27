@@ -1,0 +1,2 @@
+npm install
+./node_modules/elm/bin/elm make src/App.elm --output=app/elm.js
