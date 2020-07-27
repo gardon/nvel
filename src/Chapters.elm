@@ -1,14 +1,14 @@
-module Chapters exposing (chapterDecoder, decodeChapterContent, decodeChapters, getChapterContent, getChapters, loadImage, loadImageSection, zoomImage, zoomImageSection)
+module Chapters exposing (chapterDecoder, decodeChapterContent, decodeChapters, getChapterContent, getChapters, loadImage, loadImageSection, zoomImage, zoomImageSection, chapterAudios)
 
 import Dict exposing (Dict)
-import Http exposing (..)
+import Http
 import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (hardcoded, optional, required)
-import List exposing (..)
+import Json.Decode.Pipeline exposing (optional, required)
 import Models exposing (..)
 import Msgs exposing (..)
 import Resources exposing (..)
 import Language exposing (..)
+import Audio exposing (decodeChapterAudio)
 
 
 -- Http
@@ -56,6 +56,7 @@ chapterDecoder =
         |> required "publication_date_unix" dateDecoder
         |> required "featured_image" imageDecoder
         |> required "path" Decode.string
+        |> optional "audios" decodeChapterAudio Nothing
 
 
 decodeChapters : Decode.Decoder (Dict String Chapter)
@@ -85,8 +86,8 @@ zoomImageSection index maybeChapter =
                     chapter.content
 
                 maybeSection =
-                    drop (index - 1) content
-                        |> head
+                    List.drop (index - 1) content
+                        |> List.head
             in
             case maybeSection of
                 Nothing ->
@@ -101,7 +102,7 @@ zoomImageSection index maybeChapter =
                             else
                                 { section | zoomed = True }
                     in
-                    { chapter | content = concat [ take (index - 1) content, [ newsection ], drop index content ] } |> Just
+                    { chapter | content = List.concat [ List.take (index - 1) content, [ newsection ], List.drop index content ] } |> Just
 
 
 loadImage : Model -> String -> Int -> Model
@@ -126,8 +127,8 @@ loadImageSection index maybeChapter =
                     chapter.content
 
                 maybeSection =
-                    drop (index - 1) content
-                        |> head
+                    List.drop (index - 1) content
+                        |> List.head
             in
             case maybeSection of
                 Nothing ->
@@ -144,4 +145,11 @@ loadImageSection index maybeChapter =
                         newsection =
                             { section | image = newimage }
                     in
-                    { chapter | content = concat [ take (index - 1) content, [ newsection ], drop index content ] } |> Just
+                    { chapter | content = List.concat [ List.take (index - 1) content, [ newsection ], List.drop index content ] } |> Just
+
+
+chapterAudios : Chapter -> List Audio
+chapterAudios chapter =
+  case chapter.audios of
+    Just audio -> [audio]
+    Nothing -> []

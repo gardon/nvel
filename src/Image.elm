@@ -1,4 +1,4 @@
-port module Image exposing (Derivative, Image, emptyImage)
+module Image exposing (Derivative, Image, emptyImage)
 
 
 type alias Image =

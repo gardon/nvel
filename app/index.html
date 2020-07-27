@@ -34,7 +34,8 @@
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-ML7KZRL');</script>
   <!-- End Google Tag Manager -->
-
+  <script src="/js/howler.js"></script>
+  <script src="/js/soundManager.js" language="javascript"></script>
 </head>
 <body id="scroll-top">
   <!-- Google Tag Manager (noscript) -->
@@ -54,7 +55,7 @@
       (function (scope) {
           'use strict';
       var node = document.getElementById('main');
-      var app = Elm.Main.init(node);
+      var app = Elm.App.init(node);
 
       app.ports.updatePageData.subscribe(function(pagedata) {
         //document.title = pagedata.title;
@@ -70,6 +71,12 @@
             }
           })
         }
+
+        SoundManagerSet(pagedata.audios);
+      });
+
+      app.ports.toggleSound.subscribe(function(enabled) {
+        Howler.mute(!enabled);
       });
 
       var scroll = window.pageYOffset || document.body.scrollTop;

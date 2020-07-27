@@ -2,7 +2,7 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-port module Main exposing (init, lazyImage, lazyLoad, main, navBar, pageChange, renderSocialMedia, subscriptions, toggleNavbar, update, updatePageData, view)
+port module App exposing (init, lazyImage, lazyLoad, main, navBar, pageChange, renderSocialMedia, subscriptions, toggleNavbar, update, updatePageData, view)
 
 import Chapters exposing (..)
 import Chapters.Chapter exposing (sectionId)
@@ -11,11 +11,7 @@ import Debug exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Http exposing (Header)
-import Image
-import Json.Decode as Decode
 import Language exposing (..)
-import List exposing (head)
 import Menu exposing (..)
 import Models exposing (..)
 import Msgs exposing (..)
@@ -62,7 +58,7 @@ init flags location key =
             Config.getLanguages
 
         pageData =
-            { title = translate lang Loading, lang = Language.toString lang }
+            { title = translate lang Loading, lang = Language.toString lang, audios = [] }
 
         menu =
             Menu.menu
@@ -71,24 +67,9 @@ init flags location key =
             parseLocation location
 
         model =
-            Model chapters siteInformation pageData backendConfig menu route key lang langs True location
+            Model chapters siteInformation pageData backendConfig menu route key lang langs True location True
     in
     ( model, getSiteInformation model )
-
-
-port updatePageData : PageData -> Cmd msg
-
-
-port renderSocialMedia : String -> Cmd msg
-
-
-port navBar : (Bool -> msg) -> Sub msg
-
-
-port lazyLoad : ({ chapter : String, section : Int } -> msg) -> Sub msg
-
-
-port pageChange : () -> Cmd msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -104,7 +85,7 @@ update msg model =
             in
             ( updatedModel, updatePageData updatedModel.pageData )
 
-        ChaptersLoad (Err error) ->
+        ChaptersLoad (Err _) ->
             ( model, pageChange () )
 
         ChapterContentLoad (Ok chapter) ->
@@ -183,6 +164,9 @@ update msg model =
         ToggleZoomedImage chapter section x ->
             ( zoomImage model chapter section, Task.attempt scrollZoomedImage (Dom.setViewportOf (sectionId chapter section) (toFloat x) 0 ) )
 
+        ToggleAudio ->
+          ( { model | audio = not model.audio }, toggleSound <| not model.audio )
+
         NoOp ->
             ( model, Cmd.none )
 
@@ -217,6 +201,13 @@ subscriptions model =
         ]
 
 
+port updatePageData : PageData -> Cmd msg
+port renderSocialMedia : String -> Cmd msg
+port navBar : (Bool -> msg) -> Sub msg
+port lazyLoad : ({ chapter : String, section : Int } -> msg) -> Sub msg
+port pageChange : () -> Cmd msg
+port toggleSound : Bool -> Cmd msg
+
 toggleNavbar : Bool -> Msg
 toggleNavbar flag =
     if flag == True then
@@ -224,7 +215,6 @@ toggleNavbar flag =
 
     else
         Navbar Hide
-
 
 lazyImage : { chapter : String, section : Int } -> Msg
 lazyImage record =

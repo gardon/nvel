@@ -5,5 +5,5 @@ import Models exposing (..)
 
 backend : BackendConfig
 backend =
-    { backendURL = "http://localhost/"
+    { backendURL = "http://nvel-server.docksal/"
     }

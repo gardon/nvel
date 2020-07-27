@@ -340,8 +340,13 @@ viewChapterNavbar model chapter =
         [ a [ href <| localizePath lang "/chapters" ] [ viewIndexIcon, text "Index" ]
         ]
     , chapterNavigation
+    , viewAudioSwitch model.audio
     , viewLanguageSwitcher model
     ]
+
+viewAudioSwitch : Bool -> Html Msg
+viewAudioSwitch enabled =
+  div [] [button [ onClick ToggleAudio ] [ text <| if enabled then "Music ON" else "Music OFF" ]]
 
 viewLanguageSwitcher : Model -> Html Msg
 viewLanguageSwitcher model =
@@ -483,12 +488,10 @@ templateChapter : Model -> MaybeAsset Chapter -> List (Html Msg) -> List (Html M
 templateChapter model chapter content =
     let
         sticky_class =
-            case model.navbar of
-                True ->
-                    "sticky show"
-
-                False ->
-                    "sticky"
+            if model.navbar then
+              "sticky show"
+            else
+              "sticky"
 
         navbar =
             case chapter of

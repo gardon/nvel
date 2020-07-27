@@ -18,4 +18,5 @@ type Msg
     | ToggleZoomedImage String Int Int
     --| ScrollTop (Result Dom.Error ())
     | LoadImage String Int
+    | ToggleAudio
     | NoOp

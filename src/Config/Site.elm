@@ -23,6 +23,7 @@ homeData : Language -> PageData
 homeData lang =
     { title = ""
     , lang = Language.toString lang
+    , audios = []
     }
 
 
@@ -30,6 +31,7 @@ chaptersListData : Language -> PageData
 chaptersListData lang =
     { title = translate language MenuArchive
     , lang = Language.toString lang
+    , audios = []
     }
 
 
@@ -37,6 +39,7 @@ aboutData : Language -> PageData
 aboutData lang =
     { title = translate language MenuAbout
     , lang = Language.toString lang
+    , audios = []
     }
 
 
@@ -44,6 +47,7 @@ notFoundData : Language -> PageData
 notFoundData lang =
     { title = "Oops, there was a problem!"
     , lang = Language.toString lang
+    , audios = []
     }
 
 

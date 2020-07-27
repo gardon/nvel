@@ -1,4 +1,4 @@
-module Models exposing (BackendConfig, Chapter, ChapterId, Environment(..), Language(..), MaybeAsset(..), MenuItem, Model, NavbarAction(..), PageData, Phrase(..), Route(..), Section, SectionType(..), SiteInformation, SocialIconType(..), TitlePanelFeatures, chapterContentEndpoint, chapterListEndpoint, siteInformationEndpoint)
+module Models exposing (BackendConfig, Chapter, ChapterId, Environment(..), Language(..), MaybeAsset(..), MenuItem, Model, NavbarAction(..), PageData, Phrase(..), Route(..), Section, SectionType(..), SiteInformation, SocialIconType(..), TitlePanelFeatures, Audio, chapterContentEndpoint, chapterListEndpoint, siteInformationEndpoint)
 
 import Time
 import Dict exposing (Dict)
@@ -19,6 +19,7 @@ type alias Model =
     , languages : List Language
     , navbar : Bool
     , location : Url
+    , audio: Bool
     }
 
 
@@ -40,6 +41,7 @@ type alias Chapter =
     , date : Time.Posix
     , featured_image : Image
     , path : String
+    , audios : Maybe Audio
     }
 
 
@@ -92,8 +94,14 @@ type alias SiteInformation =
 type alias PageData =
     { title : String
     , lang : String
+    , audios : List Audio
     }
 
+type alias Audio =
+  { source : List String
+  , start : String
+  , stop : String
+  }
 
 type Environment
     = Local

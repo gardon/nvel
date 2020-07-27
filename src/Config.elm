@@ -9,6 +9,7 @@ import Language exposing (..)
 import Models exposing (..)
 import Msgs exposing (..)
 import Resources exposing (..)
+import Chapters exposing (chapterAudios)
 
 
 switchBackend : BackendConfig
@@ -50,16 +51,17 @@ chapterData model id =
         maybeChapter =
             getChapterFromId model.chapters id
 
-        title =
+        (title, audios) =
             case maybeChapter of
                 Nothing ->
-                    translate model.language NotFound
+                    (translate model.language NotFound, [])
 
                 Just chapter ->
-                    chapter.title
+                    (chapter.title, chapterAudios chapter)
     in
     { title = title
     , lang = Language.toString model.language
+    , audios = audios
     }
 
 
