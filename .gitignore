@@ -11,3 +11,4 @@ app/css/*.css.gz
 
 # Ignore Environment settings
 src/Config/Environment.elm
+app/static_config.php
