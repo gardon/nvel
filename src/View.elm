@@ -340,18 +340,39 @@ viewChapterNavbar model chapter =
         [ a [ href <| localizePath lang "/chapters" ] [ viewIndexIcon, text "Index" ]
         ]
     , chapterNavigation
-    , viewAudioSwitch model.audio
-    , viewLanguageSwitcher model
+    , viewAudioSwitch model.audio (chapter.audios /= Nothing)
+    , viewChapterLanguageSwitcher model chapter
     ]
 
-viewAudioSwitch : Bool -> Html Msg
-viewAudioSwitch enabled =
-  div [] [button [ onClick ToggleAudio ] [ text <| if enabled then "Music ON" else "Music OFF" ]]
+viewAudioSwitch : Bool -> Bool -> Html Msg
+viewAudioSwitch enabled hasAudio =
+  if hasAudio then
+    div [] [button [ onClick ToggleAudio ] [ text <| if enabled then "Music ON" else "Music OFF" ]]
+  else
+    text ""
+
+viewChapterLanguageSwitcher : Model -> Chapter -> Html Msg
+viewChapterLanguageSwitcher model chapter =
+  List.map (viewChapterLanguageSwitcherLink model chapter) model.languages
+  |> ul [ class "language-switcher" ]
+
+viewChapterLanguageSwitcherLink : Model -> Chapter -> Language -> Html Msg
+viewChapterLanguageSwitcherLink model chapter lang =
+    let
+        langcode = Language.toString lang
+        maybePath = Dict.get langcode chapter.language_paths
+    in
+        if model.language == lang then
+            text ""
+        else
+          case maybePath of
+            Nothing   -> text ""
+            Just path -> li [ hreflang langcode ] [ a [ href (localizePath lang ("/chapters/" ++ path)), hreflang langcode ] [ text langcode ] ]
 
 viewLanguageSwitcher : Model -> Html Msg
 viewLanguageSwitcher model =
-    List.map (viewLanguageSwitcherLink model) model.languages
-    |> ul [ class "language-switcher" ]
+  List.map (viewLanguageSwitcherLink model) model.languages
+  |> ul [ class "language-switcher" ]
 
 viewLanguageSwitcherLink : Model -> Language -> Html Msg
 viewLanguageSwitcherLink model lang =

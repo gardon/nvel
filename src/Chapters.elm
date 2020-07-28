@@ -4,10 +4,10 @@ import Dict exposing (Dict)
 import Http
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (optional, required)
-import Models exposing (..)
-import Msgs exposing (..)
-import Resources exposing (..)
-import Language exposing (..)
+import Models exposing (Model, chapterListEndpoint, Chapter, chapterContentEndpoint, Section, Audio)
+import Msgs exposing (Msg(..))
+import Resources exposing (sectionDecoder, imageDecoder, dateDecoder)
+import Language
 import Audio exposing (decodeChapterAudio)
 
 
@@ -57,6 +57,7 @@ chapterDecoder =
         |> required "featured_image" imageDecoder
         |> required "path" Decode.string
         |> optional "audios" decodeChapterAudio Nothing
+        |> optional "language_paths" (Decode.dict Decode.string) Dict.empty
 
 
 decodeChapters : Decode.Decoder (Dict String Chapter)
@@ -71,38 +72,33 @@ zoomImage model chapter section =
             model
 
         Just chapters ->
-            { model | chapters = Dict.update chapter (zoomImageSection section) chapters |> Just }
+            { model | chapters = Dict.update chapter (Maybe.map <| zoomImageSection section) chapters |> Just }
 
 
-zoomImageSection : Int -> Maybe Chapter -> Maybe Chapter
-zoomImageSection index maybeChapter =
-    case maybeChapter of
-        Nothing ->
-            Nothing
+zoomImageSection : Int -> Chapter -> Chapter
+zoomImageSection index chapter =
+  let
+      content =
+          chapter.content
 
-        Just chapter ->
-            let
-                content =
-                    chapter.content
+      maybeSection =
+          List.drop (index - 1) content
+              |> List.head
+  in
+  case maybeSection of
+      Nothing ->
+          chapter
 
-                maybeSection =
-                    List.drop (index - 1) content
-                        |> List.head
-            in
-            case maybeSection of
-                Nothing ->
-                    Just chapter
+      Just section ->
+          let
+              newsection =
+                  if section.zoomed == True then
+                      { section | zoomed = False }
 
-                Just section ->
-                    let
-                        newsection =
-                            if section.zoomed == True then
-                                { section | zoomed = False }
-
-                            else
-                                { section | zoomed = True }
-                    in
-                    { chapter | content = List.concat [ List.take (index - 1) content, [ newsection ], List.drop index content ] } |> Just
+                  else
+                      { section | zoomed = True }
+          in
+          { chapter | content = List.concat [ List.take (index - 1) content, [ newsection ], List.drop index content ] }
 
 
 loadImage : Model -> String -> Int -> Model
@@ -112,40 +108,35 @@ loadImage model chapter section =
             model
 
         Just chapters ->
-            { model | chapters = Dict.update chapter (loadImageSection section) chapters |> Just }
+            { model | chapters = Dict.update chapter (Maybe.map <| loadImageSection section) chapters |> Just }
 
 
-loadImageSection : Int -> Maybe Chapter -> Maybe Chapter
-loadImageSection index maybeChapter =
-    case maybeChapter of
-        Nothing ->
-            Nothing
+loadImageSection : Int -> Chapter -> Chapter
+loadImageSection index chapter =
+  let
+      content =
+          chapter.content
 
-        Just chapter ->
-            let
-                content =
-                    chapter.content
+      maybeSection =
+          List.drop (index - 1) content
+              |> List.head
+  in
+  case maybeSection of
+      Nothing ->
+          chapter
 
-                maybeSection =
-                    List.drop (index - 1) content
-                        |> List.head
-            in
-            case maybeSection of
-                Nothing ->
-                    Just chapter
+      Just section ->
+          let
+              image =
+                  section.image
 
-                Just section ->
-                    let
-                        image =
-                            section.image
+              newimage =
+                  { image | load = True }
 
-                        newimage =
-                            { image | load = True }
-
-                        newsection =
-                            { section | image = newimage }
-                    in
-                    { chapter | content = List.concat [ List.take (index - 1) content, [ newsection ], List.drop index content ] } |> Just
+              newsection =
+                  { section | image = newimage }
+          in
+          { chapter | content = List.concat [ List.take (index - 1) content, [ newsection ], List.drop index content ] }
 
 
 chapterAudios : Chapter -> List Audio

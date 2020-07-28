@@ -42,6 +42,7 @@ type alias Chapter =
     , featured_image : Image
     , path : String
     , audios : Maybe Audio
+    , language_paths : Dict String String
     }
 
 
@@ -153,14 +154,14 @@ type NavbarAction
     = Show
     | Hide
 
-
+siteInformationEndpoint : String
 siteInformationEndpoint =
     "nvel_base?_format=json"
 
-
+chapterListEndpoint : String
 chapterListEndpoint =
     "chapters?_format=json"
 
-
+chapterContentEndpoint : String
 chapterContentEndpoint =
     "chapters"
