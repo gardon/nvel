@@ -18,6 +18,7 @@ import View.Attributes exposing (..)
 import View.Mailchimp exposing (..)
 import Url exposing (Url)
 import Browser.Dom exposing (..)
+import Audio exposing (audioIconOn, audioIconOff)
 
 
 viewHome : Model -> List (Html Msg)
@@ -117,7 +118,7 @@ viewChapterFeatured lang caption_phrase featured_class chapter =
         caption =
             translate lang caption_phrase
     in
-    div ([ class ("chapter-featured equal-heights " ++ featured_class) ] ++ skeletonGridSize SixColumns)
+    div ( class ("chapter-featured equal-heights " ++ featured_class) :: skeletonGridSize SixColumns)
         [ viewImage [] chapter.featured_image
         , div [ class "image-overlay" ]
             [ h3 [] [ text caption ]
@@ -347,7 +348,12 @@ viewChapterNavbar model chapter =
 viewAudioSwitch : Bool -> Bool -> Html Msg
 viewAudioSwitch enabled hasAudio =
   if hasAudio then
-    div [] [button [ onClick ToggleAudio ] [ text <| if enabled then "Music ON" else "Music OFF" ]]
+    div [ class "audio-switcher" ] [button [ onClick ToggleAudio ] <|
+      if enabled then
+        [ audioIconOn, span [] [ text "Music ON"]]
+      else
+        [ audioIconOff, span [] [ text "Music OFF" ]]
+    ]
   else
     text ""
 
