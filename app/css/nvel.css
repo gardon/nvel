@@ -60,6 +60,10 @@ span.loading-icon {
   display: flex;
 }
 
+.navbar-container .navbar {
+  flex-grow: 4;
+}
+
 .navbar-container.sticky {
 	position: fixed;
 	top: 0;
@@ -154,7 +158,7 @@ ul.navbar-list li.active a:hover {
 }
 
 ul.social-links,
-ul.language-switcher {
+.chapternav ul.language-switcher {
 	line-height: 40px;
 }
 

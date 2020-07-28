@@ -451,12 +451,18 @@ viewAbout model =
         Markdown.toHtmlWith markdownOptions [ class "container about-container" ] content
 
 
+viewNavbar : Model -> Html Msg
+viewNavbar model =
+  div [ class "navbar-container" ]
+    [ div [ class "container" ]
+      [ viewMenu model model.menu
+      , viewLanguageSwitcher model
+      ]
+    ]
+
 templateHome : Model -> List (Html Msg) -> List (Html Msg)
 templateHome model content =
-    [ div [ class "container navbar-container" ]
-        [ viewMenu model model.menu
-        , viewLanguageSwitcher model
-        ]
+    [ viewNavbar model
     , div [ class "container title-container" ]
         [ viewTitle model
         ]
@@ -470,10 +476,7 @@ templateHome model content =
 
 templatePages : Model -> List (Html Msg) -> List (Html Msg)
 templatePages model content =
-    [ div [ class "container navbar-container" ]
-        [ viewMenu model model.menu
-        , viewLanguageSwitcher model
-        ]
+    [ viewNavbar model
     , div [ class "container title-container" ]
         [ viewTitle model
         ]
