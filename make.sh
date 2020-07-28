@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PHP="php"
-ELM="./node_modules/elm/bin/elm make"
+ELM="./node_modules/elm/bin/elm make --optimize"
 
 npm install
 ${ELM} src/App.elm --output=app/main.js
