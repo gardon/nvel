@@ -134,6 +134,9 @@ viewSection model =
                 ]
             )
 
+        AudioSection _ _ ->
+          (section_id, skeletonRow [ class "section-audio", id section_id ] [])
+
 sectionId : String -> Int -> String
 sectionId chapter section =
     "section:" ++ chapter ++ ":" ++ String.fromInt section

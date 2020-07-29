@@ -4,11 +4,12 @@ import Dict exposing (Dict)
 import Http
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (optional, required)
-import Models exposing (Model, chapterListEndpoint, Chapter, chapterContentEndpoint, Section, Audio)
+import Models exposing (Model, chapterListEndpoint, Chapter, chapterContentEndpoint, Section, Audio, SectionType(..))
 import Msgs exposing (Msg(..))
 import Resources exposing (sectionDecoder, imageDecoder, dateDecoder)
 import Language
 import Audio exposing (decodeChapterAudio)
+import Chapters.Chapter exposing (sectionId)
 
 
 -- Http
@@ -141,6 +142,11 @@ loadImageSection index chapter =
 
 chapterAudios : Chapter -> List Audio
 chapterAudios chapter =
-  case chapter.audios of
+  (case chapter.audios of
     Just audio -> [audio]
-    Nothing -> []
+    Nothing -> []) ++
+  List.filterMap (\section ->
+    case section.sectionType of
+      AudioSection audio crossfade -> Just { audio | start = sectionId section.chapter section.id, crossfade = crossfade }
+      _ -> Nothing ) chapter.content
+

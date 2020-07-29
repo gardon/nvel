@@ -59,6 +59,7 @@ type SectionType
     | TitlePanel TitlePanelFeatures
     | Spacer
     | Text String
+    | AudioSection Audio Int
 
 
 type alias Section =
@@ -102,6 +103,7 @@ type alias Audio =
   { source : List String
   , start : String
   , stop : String
+  , crossfade : Int
   }
 
 type Environment

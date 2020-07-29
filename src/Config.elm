@@ -37,12 +37,7 @@ siteInformation =
 
 getChapterFromId : Maybe (Dict String Chapter) -> String -> Maybe Chapter
 getChapterFromId maybeChapters id =
-    case maybeChapters of
-        Nothing ->
-            Nothing
-
-        Just chapters ->
-            Dict.get id chapters
+  Maybe.andThen (Dict.get id) maybeChapters
 
 
 chapterData : Model -> String -> PageData

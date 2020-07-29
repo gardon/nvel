@@ -6,6 +6,7 @@ import Image exposing (Image)
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
 import Models exposing (..)
+import Audio exposing (decodeAudio)
 
 
 
@@ -67,6 +68,9 @@ decodeSection sectionType =
 
         "text" ->
             decodeText
+
+        "audio" ->
+            decodeAudioSection
 
         _ ->
             Decode.fail <| "Unknown section type: " ++ sectionType
@@ -150,6 +154,23 @@ decodeTextSection text =
         |> required "chapter" Decode.string
         |> required "id" Decode.int
         |> hardcoded False
+
+decodeAudioSection : Decode.Decoder Section
+decodeAudioSection =
+  Decode.field "audios" decodeAudio
+    |> Decode.andThen decodeAudioSectionBase
+
+decodeAudioSectionBase : Audio -> Decode.Decoder Section
+decodeAudioSectionBase audio =
+  Decode.field "crossfade" Decode.int
+    |> Decode.andThen (\crossfade ->
+      Decode.succeed Section
+        |> hardcoded (AudioSection audio crossfade)
+        |> hardcoded Image.emptyImage
+        |> required "chapter" Decode.string
+        |> required "id" Decode.int
+        |> hardcoded False
+    )
 
 
 
