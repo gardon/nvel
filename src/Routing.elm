@@ -1,14 +1,14 @@
 module Routing exposing (matchers, parseLocation, routeContent)
 
 import Chapters.Chapter exposing (view)
-import Dict exposing (Dict)
+import Dict
 import Html exposing (Html, text)
-import Models exposing (ChapterId, MaybeAsset(..), Model, Route(..), Language(..))
+import Models exposing (MaybeAsset(..), Model, Route(..), Language(..))
 import Msgs exposing (Msg)
-import Url.Parser exposing (..)
+import Url.Parser exposing (Parser, oneOf, map, top, s, string, (</>), parse)
 import Url exposing (Url)
 import View exposing (templateChapter, templateHome, templatePages, viewAbout, viewChapterList, viewHome)
-import Language exposing (..)
+import Language exposing (removeLanguage)
 
 
 matchers : Parser (Route -> a) a
@@ -71,7 +71,7 @@ routeContent model =
                                     Asset chapter
 
                 content =
-                    [ Chapters.Chapter.view maybeChapter ]
+                    [ Chapters.Chapter.view model.language maybeChapter ]
             in
             templateChapter model maybeChapter content
 

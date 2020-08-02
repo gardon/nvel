@@ -1,21 +1,22 @@
 module Chapters.Chapter exposing (replaceChapter, view, viewChapter, viewChapterContent, viewSection, sectionId)
 
 import Dict
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
-import Html.Lazy exposing (..)
+import Html exposing (Html, div, h1, h2, h3, text)
+import Html.Attributes exposing (class, classList, id)
+import Html.Lazy exposing (lazy2)
 import Html.Keyed
 import Markdown
-import Models exposing (..)
+import Models exposing (Chapter, MaybeAsset(..), Model, Section, SectionType(..), Language(..), Phrase(..))
 import Msgs exposing (Msg)
-import Skeleton exposing (..)
-import View exposing (..)
-import View.Attributes exposing (..)
+import Skeleton exposing (skeletonRow, skeletonRowFullWidth)
+import View exposing (loading, viewImage, markdownOptions)
+import View.Attributes exposing (onClickZoom, sizes)
+import Language exposing (translate, translateMonth)
+import Time
 
 
-view : MaybeAsset Chapter -> Html Msg
-view model =
+view : Language -> MaybeAsset Chapter -> Html Msg
+view lang model =
     case model of
         AssetLoading ->
             div []
@@ -28,7 +29,7 @@ view model =
                 ]
 
         Asset chapter ->
-            viewChapter chapter
+            viewChapter lang chapter
 
 
 replaceChapter : Model -> Chapter -> Model
@@ -41,19 +42,43 @@ replaceChapter model newchapter =
             { model | chapters = Just (Dict.insert newchapter.path newchapter chapters) }
 
 
-viewChapter : Chapter -> Html Msg
-viewChapter chapter =
-    List.append [ ("chapter_title", h1 [ class "chapter-title hidden" ] [ text chapter.title ]) ] (viewChapterContent chapter.content)
+viewChapter : Language -> Chapter -> Html Msg
+viewChapter lang chapter =
+    List.append [ ("chapter_title", h1 [ class "chapter-title hidden" ] [ text chapter.title ]) ] (viewChapterContent lang chapter.content)
         |> Html.Keyed.node "div" []
 
 
-viewChapterContent : List Section -> List (String, Html Msg)
-viewChapterContent model =
-    List.map viewSection model
+viewChapterContent : Language -> List Section -> List (String, Html Msg)
+viewChapterContent lang model =
+    List.map (viewSection lang) model
 
+viewSection : Language -> Section -> (String, Html Msg)
+viewSection lang section =
+  if section.preview then viewSectionPreview lang section else viewSectionFull section
 
-viewSection : Section -> (String, Html Msg)
-viewSection model =
+viewSectionPreview : Language -> Section -> (String, Html Msg)
+viewSectionPreview lang section =
+  let
+    content = skeletonRow [ class "section-preview" ]
+      [ h2 []
+        [ text (translate lang UpdateSchedule)
+        , text (viewDate lang section.date)
+        ]
+      ]
+  in (sectionId section.chapter section.id, content)
+
+viewDate : Language -> Time.Posix -> String
+viewDate lang time =
+  let
+    month = Time.toMonth Time.utc time |> translateMonth lang
+    day = Time.toDay Time.utc time |> String.fromInt
+  in
+    case lang of
+      Pt_Br -> day ++ " de " ++ month
+      En    -> month ++ " " ++ day
+
+viewSectionFull : Section -> (String, Html Msg)
+viewSectionFull model =
     let  section_id = sectionId model.chapter model.id in
     case model.sectionType of
         SingleImage ->

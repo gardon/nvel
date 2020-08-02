@@ -640,9 +640,15 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 	}
 }
 
-.section-title {
+.section-title,
+.section-preview {
 	text-align: center;
 	padding-bottom: 2em;
+}
+
+.section-preview {
+  padding-top: 8em;
+  padding-bottom: 6em;
 }
 
 .section-title img {

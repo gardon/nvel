@@ -68,6 +68,8 @@ type alias Section =
     , chapter : String
     , id : Int
     , zoomed : Bool
+    , preview : Bool
+    , date : Time.Posix
     }
 
 
@@ -150,6 +152,7 @@ type Phrase
     | Next
     | Previous
     | ZoomInstructions
+    | UpdateSchedule
 
 
 type NavbarAction

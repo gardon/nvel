@@ -1,11 +1,10 @@
 module Resources exposing (dateDecoder, decodeDerivative, decodeFullWidthSingleImageSection, decodeSection, decodeSingleImageSection, decodeSiteInformation, decodeSpacer, decodeText, decodeTextSection, decodeTitlePanel, decodeTitlePanelFeatures, decodeTitlePanelSection, imageDecoder, sectionDecoder)
 
 import Time
-import Http exposing (Header)
 import Image exposing (Image)
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (hardcoded, optional, required)
-import Models exposing (..)
+import Models exposing (Section, SectionType(..), TitlePanelFeatures, Audio, SiteInformation)
 import Audio exposing (decodeAudio)
 
 
@@ -84,6 +83,9 @@ decodeFullWidthSingleImageSection =
         |> required "chapter" Decode.string
         |> required "id" Decode.int
         |> hardcoded False
+        |> optional "preview" Decode.bool False
+        |> required "publication_date_unix" dateDecoder
+
 
 
 decodeSingleImageSection : Decode.Decoder Section
@@ -94,6 +96,9 @@ decodeSingleImageSection =
         |> required "chapter" Decode.string
         |> required "id" Decode.int
         |> hardcoded False
+        |> optional "preview" Decode.bool False
+        |> required "publication_date_unix" dateDecoder
+
 
 
 decodeFoldedImageSection : Decode.Decoder Section
@@ -104,6 +109,9 @@ decodeFoldedImageSection =
         |> required "chapter" Decode.string
         |> required "id" Decode.int
         |> hardcoded False
+        |> optional "preview" Decode.bool False
+        |> required "publication_date_unix" dateDecoder
+
 
 decodeSpacer : Decode.Decoder Section
 decodeSpacer =
@@ -113,6 +121,9 @@ decodeSpacer =
         |> required "chapter" Decode.string
         |> required "id" Decode.int
         |> hardcoded False
+        |> optional "preview" Decode.bool False
+        |> required "publication_date_unix" dateDecoder
+
 
 
 decodeTitlePanel : Decode.Decoder Section
@@ -129,6 +140,9 @@ decodeTitlePanelSection features =
         |> required "chapter" Decode.string
         |> required "id" Decode.int
         |> hardcoded False
+        |> optional "preview" Decode.bool False
+        |> required "publication_date_unix" dateDecoder
+
 
 
 decodeTitlePanelFeatures : Decode.Decoder TitlePanelFeatures
@@ -154,6 +168,9 @@ decodeTextSection text =
         |> required "chapter" Decode.string
         |> required "id" Decode.int
         |> hardcoded False
+        |> optional "preview" Decode.bool False
+        |> required "publication_date_unix" dateDecoder
+
 
 decodeAudioSection : Decode.Decoder Section
 decodeAudioSection =
@@ -170,6 +187,9 @@ decodeAudioSectionBase audio =
         |> required "chapter" Decode.string
         |> required "id" Decode.int
         |> hardcoded False
+        |> optional "preview" Decode.bool False
+        |> required "publication_date_unix" dateDecoder
+
     )
 
 

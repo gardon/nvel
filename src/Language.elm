@@ -98,6 +98,9 @@ translatePtBr phrase =
         ZoomInstructions ->
             "Toque nas imagens para aproximar"
 
+        UpdateSchedule ->
+          "Nova atualização agendada para: "
+
 translateMonthPtBr : MonthTranslator
 translateMonthPtBr month =
     case month of
@@ -164,6 +167,10 @@ translateEn phrase =
 
         ZoomInstructions ->
             "Touch the images to zoom"
+
+        UpdateSchedule ->
+          "New update scheduled for: "
+
 
 translateMonthEn : MonthTranslator
 translateMonthEn month =
