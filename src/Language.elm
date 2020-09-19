@@ -1,9 +1,8 @@
 module Language exposing (toString, toLang, translate, translateMonth, localizePath, parseLanguage, removeLanguage)
 
-import Models exposing (..)
-import Time exposing (..)
-import Url exposing (..)
-
+import Models exposing (Phrase(..), Language(..))
+import Time exposing (Month(..))
+import Url exposing (Url)
 
 type alias Translator =
     Phrase -> String
@@ -60,7 +59,7 @@ translatePtBr phrase =
             "Prefácio"
 
         CurrentChapter ->
-            "Último Capítulo"
+            "Ler a última atualização »"
 
         StartFromBeginning ->
             "Começo da história"
@@ -99,7 +98,7 @@ translatePtBr phrase =
             "Toque nas imagens para aproximar"
 
         UpdateSchedule ->
-          "Nova atualização agendada para: "
+            "Nova atualização agendada para: "
 
 translateMonthPtBr : MonthTranslator
 translateMonthPtBr month =
@@ -130,7 +129,7 @@ translateEn phrase =
             "About"
 
         CurrentChapter ->
-            "Current Chapter"
+            "Read latest update »"
 
         StartFromBeginning ->
             "Start from beginning"
@@ -169,7 +168,7 @@ translateEn phrase =
             "Touch the images to zoom"
 
         UpdateSchedule ->
-          "New update scheduled for: "
+            "New update scheduled for: "
 
 
 translateMonthEn : MonthTranslator
@@ -196,17 +195,14 @@ parseLanguage : Url -> Maybe Language
 parseLanguage location =
     let parts = List.drop 1 <| String.split "/" location.path
     in
-        case List.head parts of
-            Just part ->
-                toLang part
-            Nothing ->
-                Nothing
+      List.head parts
+      |> Maybe.andThen toLang
 
 
 removeLanguage : Url -> Url
 removeLanguage location =
     case parseLanguage location of
-      Just part ->
+      Just _ ->
         { location | path = "/" ++ (String.join "/" <| List.drop 2 <| String.split "/" location.path) }
       Nothing ->
         location

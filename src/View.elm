@@ -1,4 +1,33 @@
-module View exposing (linkButton, linkButtonBig, linkButtonPrimary, loading, markdownOptions, sortChapterList, templateChapter, templateHome, templatePages, viewAbout, viewChapterFeatured, viewChapterFeaturedCurrent, viewChapterFeaturedFirst, viewChapterFeaturedNext, viewChapterList, viewChapterListItem, viewChapterNavItem, viewChapterNavbar, viewChapterNavigation, viewDeviantArtLink, viewFacebookPageLink, viewHome, viewImage, viewIndexIcon, viewInstagramLink, viewMenu, viewMenuItem, viewSocialIcon, viewSocialLinks, viewTitle)
+module View exposing
+  ( linkButton
+  , linkButtonBig
+  , linkButtonPrimary
+  , loading
+  , markdownOptions
+  , sortChapterList
+  , templateChapter
+  , templateHome
+  , templatePages
+  , viewAbout
+  , viewChapterFeatured
+  , viewChapterFeaturedCurrent
+  , viewChapterFeaturedNext
+  , viewChapterList
+  , viewChapterListItem
+  , viewChapterNavItem
+  , viewChapterNavbar
+  , viewChapterNavigation
+  , viewDeviantArtLink
+  , viewFacebookPageLink
+  , viewHome
+  , viewImage
+  , viewIndexIcon
+  , viewInstagramLink
+  , viewMenu
+  , viewMenuItem
+  , viewSocialIcon
+  , viewSocialLinks
+  , viewTitle )
 
 import Time
 import Dict exposing (Dict)
@@ -29,28 +58,11 @@ viewHome model =
 
         Just chapters ->
             let
-                list =
-                    sortChapterList chapters
-
                 lang =
                     model.language
 
                 firstrow =
-                    case List.head (List.reverse list) of
-                        Nothing ->
-                            skeletonRow [] []
-
-                        Just current ->
-                            case List.head list of
-                                Nothing ->
-                                    skeletonRow [] [ viewChapterFeaturedCurrent lang current ]
-
-                                Just first ->
-                                    if current == first then
-                                        skeletonRow [] [ viewChapterFeaturedCurrent lang current ]
-
-                                    else
-                                        skeletonRow [] [ viewChapterFeaturedCurrent lang current, viewChapterFeaturedFirst lang first ]
+                      skeletonRow [] []
 
                 secondrow =
                     skeletonRow [ class "center chapters-button" ]
@@ -118,18 +130,10 @@ viewChapterFeatured lang caption_phrase featured_class chapter =
         caption =
             translate lang caption_phrase
     in
-    div ( class ("chapter-featured equal-heights " ++ featured_class) :: skeletonGridSize SixColumns)
-        [ viewImage [] chapter.featured_image
-        , div [ class "image-overlay" ]
-            [ h3 [] [ text caption ]
-            , h2 [] [ span [] [ text chapterNumber ], text chapter.title ]
-            ]
-        , div [ class "inner" ]
-            [ translate lang ReadIt
-                |> linkButtonPrimary chapterPath
-            , div [ class "description" ] [ text chapter.field_description ]
-            , div [ class "author" ] [ text (String.concat chapter.authors) ]
-            , div [ class "date" ] [ text (viewDate lang chapter.date) ]
+    div ( [ class ("chapter-featured " ++ featured_class), style "background-image" ("url(" ++ chapter.featured_image.uri ++ ");") ] ++ skeletonGridSize SixColumns )
+        [ a [ href chapterPath ]
+            [ h2 [] [ text caption ]
+            , h3 [] [ span [] [ text chapterNumber ], text chapter.title, small [] [ text (viewFeaturedDate lang chapter.date) ] ]
             ]
         ]
 
@@ -142,15 +146,18 @@ viewDate lang time =
   in
     year ++ " " ++ month ++ " " ++ day
 
+viewFeaturedDate : Language -> Time.Posix -> String
+viewFeaturedDate lang time =
+  let
+    month = Time.toMonth Time.utc time |> translateMonth lang
+    day = Time.toDay Time.utc time |> String.fromInt
+  in
+    month ++ " " ++ day
 
 viewChapterFeaturedCurrent : Language -> Chapter -> Html Msg
 viewChapterFeaturedCurrent lang chapter =
     viewChapterFeatured lang CurrentChapter "current-chapter" chapter
 
-
-viewChapterFeaturedFirst : Language -> Chapter -> Html Msg
-viewChapterFeaturedFirst lang chapter =
-    viewChapterFeatured lang StartFromBeginning "first-chapter" chapter
 
 
 viewChapterFeaturedNext : Language -> Chapter -> Html Msg
@@ -230,7 +237,7 @@ viewMenuItem model item =
                 ""
         itemPath = localizePath model.language item.path
     in
-    li [ class "navbar-item", class activeclass ]
+    li [ class "navbar-item bubble", class activeclass ]
         [ a [ href itemPath, class "navbar-link" ] [ text (translate model.language item.title) ]
         ]
 
@@ -388,7 +395,7 @@ viewLanguageSwitcherLink model lang =
         if model.language == lang then
             text ""
         else
-            li [ hreflang langcode ] [ a [ href (localizePath lang originalLocation.path), hreflang langcode ] [ text langcode ] ]
+            li [ hreflang langcode, class "bubble"  ] [ a [ href (localizePath lang originalLocation.path), hreflang langcode ] [ text langcode ] ]
 
 
 viewChapterNavigation : Language -> Maybe Chapter -> Chapter -> Maybe Chapter -> Html Msg
@@ -478,9 +485,9 @@ viewAbout model =
         Markdown.toHtmlWith markdownOptions [ class "container about-container" ] content
 
 
-viewNavbar : Model -> Html Msg
-viewNavbar model =
-  div [ class "navbar-container" ]
+viewNavbar : List (Attribute Msg) -> Model -> Html Msg
+viewNavbar attributes model =
+  div ( class "navbar-container" :: attributes )
     [ div [ class "container" ]
       [ viewMenu model model.menu
       , viewLanguageSwitcher model
@@ -489,21 +496,36 @@ viewNavbar model =
 
 templateHome : Model -> List (Html Msg) -> List (Html Msg)
 templateHome model content =
-    [ viewNavbar model
-    , div [ class "container title-container" ]
-        [ viewTitle model
+  [ viewNavbar [ class "home" ] model
+  , viewTitleContainer model "title-container"
+  , viewTitleContainer model "title-container-mobile"
+  ]
+    ++ content
+    ++ [ div [ class "container footer-container" ]
+            [ viewSocialLinks model
+            ]
         ]
-    ]
-        ++ content
-        ++ [ div [ class "container footer-container" ]
-                [ viewSocialLinks model
-                ]
-           ]
 
+viewTitleContainer : Model -> String -> Html Msg
+viewTitleContainer model class_ =
+  let
+    list = model.chapters
+      |> Maybe.map sortChapterList
+      |> Maybe.map List.reverse
+      |> Maybe.withDefault []
+  in
+    div [ class class_, class "home-title", class <| Language.toString model.language ]
+    [ viewTitle model
+    , case list of
+        current :: _ ->
+          skeletonRow [] [ viewChapterFeaturedCurrent model.language current ]
+        [] ->
+          skeletonRow [] []
+    ]
 
 templatePages : Model -> List (Html Msg) -> List (Html Msg)
 templatePages model content =
-    [ viewNavbar model
+    [ viewNavbar [] model
     , div [ class "container title-container" ]
         [ viewTitle model
         ]

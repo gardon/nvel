@@ -6,6 +6,14 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'komikula';
+    src: url('komikula-webfont.woff2') format('woff2'),
+         url('komikula-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 img.u-full-width {
 	height: auto;
 	max-width: 1200px;
@@ -36,7 +44,12 @@ span.loading-icon {
 	top: 50vh;
 	left: 50vw;
 	margin-top: -48px;
-	margin-left: -48px;
+  margin-left: -48px;
+  background-color: #0007;
+  border-radius: 8px;
+  padding: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .button.big {
@@ -57,9 +70,14 @@ span.loading-icon {
 
 .navbar-container {
 	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-	border-bottom: 1px solid #ddd;
-	margin-bottom: 0.5em;
+  padding-bottom: 0.5em;
+  font-family: komikula;
+  font-size: 1.3em;
+}
+.navbar-container.home {
+  position: absolute;
+  width: 100%;
+  padding-top: 1em;
 }
 
 @media (max-width: 550px) {
@@ -124,8 +142,17 @@ ul.language-switcher {
 ul.navbar-list li,
 ul.social-links li,
 ul.language-switcher li {
-	display: inline;
-	margin: 0 2em 0 0;
+  display: inline;
+}
+
+.bubble {
+  margin: 0 1em 0 0;
+  background-color: #050403E0;
+  padding: 0.5em 1.25em;
+  border-radius: 21% 59% 34% 55% / 59% 27% 64% 35%;
+}
+.bubble:nth-child(even) {
+  border-radius: 43% 48% 46% 51% / 69% 68% 64% 100% ;
 }
 
 ul.social-links li:last-child,
@@ -137,8 +164,8 @@ ul.navbar-list li a,
 ul.language-switcher li a {
 	text-decoration: none;
 	text-transform: uppercase;
-	color: #777;
-	font-size:1.2em;
+	color: #FFF;
+	font-size:1.5em;
 }
 
 @media (min-width: 750px) {
@@ -160,7 +187,7 @@ ul.navbar-list li.active a:active,
 ul.navbar-list li.active a:focus,
 ul.navbar-list li.active a:hover {
 	font-weight: bold;
-	color: #C56E56;
+	color: #7C98AF;
 }
 
 .navbar-container button {
@@ -258,7 +285,6 @@ ul.social-links li a svg {
 
 h1.site-title {
 	text-align: center;
-	display: block;
 	background-image: url(../images/logo.svg);
 	background-size: 250px;
 	background-repeat: no-repeat;
@@ -280,15 +306,18 @@ h1.site-title {
 	}
 }
 
-h1,h2,h3 { font-family: "abismosbase"; }
+h1,h2,h3 { font-family: "komikula"; }
 
 h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 
 .chapter-featured {
-	box-shadow: 0px 0px 2px #666;
-	max-width: 460px;
-	position: relative;
-	margin-bottom: 2em;
+    top: 663px;
+    background-color: #000D;
+    padding: 41px 42px;
+    left: -6em;
+  position: relative;
+  border-radius: 65% 63% 65% 43% / 82% 81% 89% 77% ;
+  text-align: center;
 }
 
 .chapter-featured img {
@@ -322,22 +351,31 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 	text-align: right;
 }
 
-.chapter-featured .image-overlay h3 {
-	font-size: 0.8em;
+.chapter-featured a {
+  text-decoration: none;
+  color: #FFF;
+}
+.chapter-featured  h3 {
+	font-size: 1.8em;
 	text-transform: uppercase;
-	font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	color: #E9BEB3;
 	font-weight: bold;
 	margin: 0;
 	letter-spacing: 2px;
 }
 
-.chapter-featured .image-overlay h2 {
+.chapter-featured  h3 small {
+  font-size: 0.7em;
+  	color: #E9BEB3;
+}
+
+
+.chapter-featured  h2 {
 	line-height: 1.3;
 	color: #FFF;
 	text-shadow: 0 0 2px #000;
-	font-size: 2em;
-	text-transform: uppercase;
+	font-size: 2.4em;
+  text-transform: uppercase;
+  margin: 0;
 }
 
 .chapter-featured .image-overlay h2 span {
@@ -743,3 +781,39 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 .chapter-navigation ul.next li:first-child .chapter-title {
 	display: inline;
 }**/
+
+.title-container.home-title,
+.title-container-mobile.home-title {
+  margin: 0;
+  top: 0;
+  z-index: -1;
+  height: 1080px;
+  background-position: center;
+  overflow: hidden;
+  width: 100%;
+  box-shadow: 0 -5px 26px black;
+}
+
+.title-container.home-title h1.site-title,
+.title-container-mobile.home-title h1.site-title {
+  display: none;
+}
+
+
+.title-container.home-title {
+  display: none;
+  background-image: url(../images/frontpage-desktop-pt-br.jpg);
+}
+
+.title-container.home-title.en {
+  background-image: url(../images/frontpage-desktop-en.jpg);
+}
+
+@media (min-width: 1024px) {
+  .title-container-mobile.home-title {
+    display: none;
+  }
+  .title-container.home-title {
+    display: block;
+  }
+}

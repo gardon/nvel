@@ -11,7 +11,7 @@ type alias Image =
     , load : Bool
     }
 
-
+emptyImage : Image
 emptyImage =
     Image "" 0 0 "" "" [] False
 
