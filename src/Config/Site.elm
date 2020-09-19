@@ -16,6 +16,7 @@ siteInformation =
     , instagram_handle = ""
     , deviantart_profile = ""
     , aboutContent = ""
+    , preface = ""
     }
 
 

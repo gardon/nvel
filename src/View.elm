@@ -31,22 +31,20 @@ module View exposing
 
 import Time
 import Dict exposing (Dict)
-import Html exposing (..)
+import Html exposing (Html, div, a, h1, h2, h3, text, span, small, Attribute, img, nav, ul, li, button)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Image exposing (Derivative, Image)
+import Image exposing (Image)
 import Language exposing (translate, translateMonth, localizePath, removeLanguage)
 import Markdown
 import Menu exposing (..)
 import Models exposing (..)
-import Msgs exposing (..)
-import Skeleton exposing (..)
+import Msgs exposing (Msg(..))
+import Skeleton exposing (skeletonRow, skeletonGridSize, GridSize(..), skeletonColumn)
 import Svg exposing (path, svg)
 import Svg.Attributes exposing (d, viewBox, xmlSpace)
-import View.Attributes exposing (..)
-import View.Mailchimp exposing (..)
-import Url exposing (Url)
-import Browser.Dom exposing (..)
+import View.Attributes exposing (srcset)
+import View.Mailchimp exposing (mailchimpBlock)
 import Audio exposing (audioIconOn, audioIconOff)
 
 
@@ -62,13 +60,10 @@ viewHome model =
                     model.language
 
                 firstrow =
-                      skeletonRow [] []
+                      skeletonRow [] [ viewPreface model ]
 
                 secondrow =
-                    skeletonRow [ class "center chapters-button" ]
-                        [ translate lang ListAllChapters
-                            |> linkButtonBig (localizePath model.language "/chapters")
-                        ]
+                    div [] <| viewChapterList model
 
                 thirdrow =
                     skeletonRow []
@@ -483,6 +478,13 @@ viewAbout model =
 
     else
         Markdown.toHtmlWith markdownOptions [ class "container about-container" ] content
+
+viewPreface : Model -> Html msg
+viewPreface model =
+  if model.siteInformation.preface == "" then
+    text ""
+  else
+    Markdown.toHtmlWith markdownOptions [ class "container preface-container" ] model.siteInformation.preface
 
 
 viewNavbar : List (Attribute Msg) -> Model -> Html Msg

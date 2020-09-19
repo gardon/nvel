@@ -92,6 +92,7 @@ type alias SiteInformation =
     , instagram_handle : String
     , deviantart_profile : String
     , aboutContent : String
+    , preface : String
     }
 
 
