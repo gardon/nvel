@@ -1,11 +1,10 @@
 module View.Mailchimp exposing (mailchimpBlock)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html exposing (div, Html, label, input, text, span)
+import Html.Attributes exposing (id, class, action, method, name, target, attribute, value, placeholder, style, type_, tabindex)
 import Language exposing (translate)
-import Models exposing (..)
-import Skeleton exposing (..)
+import Models exposing (Model, Phrase(..))
+import Skeleton exposing (skeletonGridSize, GridSize(..))
 
 
 mailchimpBlock : Model -> Html msg
@@ -51,9 +50,7 @@ mailchimpBlock model =
                     , div [ style "position" "absolute", style "left" "-5000px", attribute "aria-hidden" "true" ]
                         [ input [ name "b_3d03ee122031fb9d8b086b942_35a44ac040", tabindex -1, value "", type_ "text" ] []
                         ]
-                    , div [ class "clear" ]
-                        [ input [ value button_text, name "subscribe", id "mc-embedded-subscribe", class "button button-primary", type_ "submit" ] []
-                        ]
+                    , input [ value button_text, name "subscribe", id "mc-embedded-subscribe", class "button button-primary", type_ "submit" ] []
                     ]
                 ]
             , span [ id "mailchimp-small" ] [ text small_message ]

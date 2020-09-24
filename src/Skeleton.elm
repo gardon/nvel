@@ -81,12 +81,12 @@ skeletonGridSize size =
 
 skeletonRow : List (Attribute msg) -> List (Html msg) -> Html msg
 skeletonRow attributes content =
-    div ([ class "row container" ] ++ attributes) content
+    div ( class "row container" :: attributes) content
 
 
 skeletonRowFullWidth : List (Attribute msg) -> List (Html msg) -> Html msg
 skeletonRowFullWidth attributes content =
-    skeletonRow ([ class "u-full-width u-max-full-width" ] ++ attributes) content
+    skeletonRow ( class "u-full-width u-max-full-width" :: attributes) content
 
 
 skeletonColumn : GridSize -> List (Attribute msg) -> List (Html msg) -> Html msg

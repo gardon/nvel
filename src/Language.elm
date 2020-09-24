@@ -50,13 +50,13 @@ translatePtBr : Translator
 translatePtBr phrase =
     case phrase of
         MenuHome ->
-            "Capa"
+            "Início"
 
         MenuArchive ->
             "Índice"
 
         MenuAbout ->
-            "Prefácio"
+            "Sobre"
 
         CurrentChapter ->
             "Ler a última atualização »"

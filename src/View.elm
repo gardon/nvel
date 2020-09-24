@@ -32,21 +32,19 @@ module View exposing
 import Time
 import Dict exposing (Dict)
 import Html exposing (Html, div, a, h1, h2, h3, text, span, small, Attribute, img, nav, ul, li, button)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
+import Html.Attributes exposing (class, style, href, src, target, width, height, alt, title, hreflang)
+import Html.Events exposing (onClick)
 import Image exposing (Image)
 import Language exposing (translate, translateMonth, localizePath, removeLanguage)
 import Markdown
-import Menu exposing (..)
-import Models exposing (..)
+import Models exposing (Model, Phrase(..), Chapter, Language, MenuItem, SocialIconType(..), MaybeAsset(..))
 import Msgs exposing (Msg(..))
-import Skeleton exposing (skeletonRow, skeletonGridSize, GridSize(..), skeletonColumn)
+import Skeleton exposing (skeletonRow, skeletonRowFullWidth, skeletonGridSize, GridSize(..), skeletonColumn)
 import Svg exposing (path, svg)
 import Svg.Attributes exposing (d, viewBox, xmlSpace)
 import View.Attributes exposing (srcset)
 import View.Mailchimp exposing (mailchimpBlock)
 import Audio exposing (audioIconOn, audioIconOff)
-
 
 viewHome : Model -> List (Html Msg)
 viewHome model =
@@ -54,10 +52,8 @@ viewHome model =
         Nothing ->
             [ loading (translate model.language Loading) ]
 
-        Just chapters ->
+        Just _ ->
             let
-                lang =
-                    model.language
 
                 firstrow =
                       skeletonRow [] [ viewPreface model ]
@@ -66,7 +62,7 @@ viewHome model =
                     div [] <| viewChapterList model
 
                 thirdrow =
-                    skeletonRow []
+                    skeletonRowFullWidth [ class "inverted" ]
                         [ mailchimpBlock model
                         -- ADD NEWS
                         ]
@@ -86,25 +82,12 @@ viewChapterList model =
 
         Just chapters ->
             let
-                list =
+                list = h2 [] [ text <| translate model.language MenuArchive ] ::
                     List.map (viewChapterListItem model.language) (sortChapterList chapters)
 
-                length =
-                    List.length list
-
-                half =
-                    (length // 2) + remainderBy 2 length
-
-                firstcol =
-                    List.take half list
-                        |> skeletonColumn SixColumns []
-
-                secondcol =
-                    List.drop half list
-                        |> skeletonColumn SixColumns []
+                firstcol = skeletonColumn TenColumns [ class "offset-by-one" ] list
             in
-            skeletonRow [] [ firstcol, secondcol ]
-                |> List.singleton
+              skeletonRow [] [ firstcol ] |> List.singleton
 
 
 sortChapterList : Dict String Chapter -> List Chapter
@@ -183,12 +166,14 @@ viewChapterListItem lang chapter =
             |> localizePath lang
 
         chapterNumber =
-            "#" ++ String.fromInt chapter.index ++ ": "
+            "#" ++ String.fromInt chapter.index
     in
     a [ href chapterPath, class "chapter-list-item" ]
-        [ h2 [] [ a [ href chapterPath ] [ span [] [ text chapterNumber ], text chapter.title ] ]
-        , div [ class "description" ] [ text chapter.field_description ]
-        , viewImage [] chapter.thumbnail
+        [ viewImage [] chapter.thumbnail
+        , div [ class "description" ]
+          [ h3 [] [ span [ class "chapter-number" ] [ text chapterNumber ], text " ", text chapter.title ]
+          , text chapter.field_description
+          ]
         , div [ class "date" ] [ text (viewDate lang chapter.date) ]
         ]
 
@@ -340,7 +325,7 @@ viewChapterNavbar model chapter =
                     viewChapterNavigation lang previous chapter next
     in
     [ div [ class "index-icon" ]
-        [ a [ href <| localizePath lang "/chapters" ] [ viewIndexIcon, text "Index" ]
+        [ a [ href <| localizePath lang "/" ] [ text <| translate model.language MenuHome ]
         ]
     , chapterNavigation
     , viewAudioSwitch model.audio (chapter.audios /= Nothing)
@@ -422,7 +407,7 @@ viewChapterNavItem lang chapter linkText title =
             |> localizePath lang
 
     in
-    li [ style "background-image" ("url(" ++ chapter.featured_image.uri ++ ")") ]
+    li []
         [ a [ href chapterPath ]
             [ text linkText
             , span [ class "chapter-title" ] [ text (": " ++ title) ]
@@ -455,7 +440,7 @@ viewTitle model =
 
 loading : String -> Html msg
 loading message =
-    span [ class "loading-icon" ] []
+    span [ class "loading-icon" ] [ text message ]
 
 
 markdownOptions : Markdown.Options
@@ -520,7 +505,7 @@ viewTitleContainer model class_ =
     [ viewTitle model
     , case list of
         current :: _ ->
-          skeletonRow [] [ viewChapterFeaturedCurrent model.language current ]
+          skeletonRow [ class "home-featured" ] [ viewChapterFeaturedCurrent model.language current ]
         [] ->
           skeletonRow [] []
     ]
@@ -561,15 +546,15 @@ templateChapter model chapter content =
         nextchapter =
             case chapter of
                 AssetNotFound ->
-                    []
+                    text ""
 
                 AssetLoading ->
-                    []
+                    text ""
 
                 Asset current ->
                     case model.chapters of
                         Nothing ->
-                            []
+                            text ""
 
                         Just chapters ->
                             let
@@ -582,20 +567,20 @@ templateChapter model chapter content =
                             in
                             case next of
                                 Nothing ->
-                                    [ mailchimpBlock model ]
+                                    skeletonRowFullWidth [ class "nextchapter inverted" ] [ mailchimpBlock model ]
 
                                 Just nchapter ->
-                                    [ viewChapterFeaturedNext model.language nchapter ]
+                                    skeletonRow [ class "nextchapter" ] [ viewChapterFeaturedNext model.language nchapter ]
     in
-    [ div [ class ("navbar-container chapternav " ++ sticky_class) ]
+    [ div [ class ("navbar-container inverted chapternav " ++ sticky_class) ]
         [ div [ class "container" ] navbar
         ]
-    , div [ class "navbar-container chapternav" ]
+    , div [ class "navbar-container inverted chapternav" ]
         [ div [ class "container" ] navbar
         ]
     ]
         ++ content
-        ++ [ skeletonRow [ class "nextchapter" ] nextchapter
+        ++ [ nextchapter
            , div [ class "container footer-container" ]
                 [ viewSocialLinks model
                 ]
