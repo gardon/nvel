@@ -173,8 +173,8 @@ viewChapterListItem lang chapter =
         , div [ class "description" ]
           [ h3 [] [ span [ class "chapter-number" ] [ text chapterNumber ], text " ", text chapter.title ]
           , text chapter.field_description
+          , div [ class "date" ] [ text (viewDate lang chapter.date) ]
           ]
-        , div [ class "date" ] [ text (viewDate lang chapter.date) ]
         ]
 
 
