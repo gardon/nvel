@@ -69,18 +69,23 @@ span.loading-icon {
 	padding-top: 0.5em;
   padding-bottom: 0.5em;
   font-family: komikula;
-  font-size: 1.3em;
+  font-size: 0.8em;
+  background-color: #000;
 }
+
 .navbar-container.home {
-  position: absolute;
   width: 100%;
-  padding-top: 1em;
   z-index: 99;
 }
 
-@media (max-width: 550px) {
+@media (min-width: 550px) {
   .navbar-container {
-    font-size: 0.8em;
+    font-size: 1.3em;
+    background-color: transparent;
+  }
+  .navbar-container.home {
+    position: absolute;
+    padding-top: 1em;
   }
 }
 
@@ -165,7 +170,7 @@ ul.language-switcher li a {
 	font-size:1.5em;
 }
 
-@media (min-width: 750px) {
+@media (min-width: 550px) {
 	ul.navbar-list li a,
   ul.language-switcher li a {
 		font-size:1em;
@@ -317,14 +322,24 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
     background-color: #000D;
     padding: 41px 42px;
   position: relative;
-  border-radius: 65% 63% 65% 43% / 82% 81% 89% 77% ;
   text-align: center;
 }
 
 .home-featured .chapter-featured {
+  font-size: 0.7em;
+  margin-top: 496px;
+  border-radius: 0;
+  background-color: #000;
+}
+
+@media (min-width: 550px) {
+.home-featured .chapter-featured {
   top: 746px;
   left: 30em;
-  font-size: 0.7em;
+  margin-top: 0;
+    border-radius: 65% 63% 65% 43% / 82% 81% 89% 77% ;
+
+}
 }
 @media (min-width: 1024px) {
   .home-featured .chapter-featured {
@@ -548,8 +563,14 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 #mc_embed_signup {
   margin-bottom: 3em;
   margin-top: 3em;
-  font-size: 1.2em;
+  font-size: 1em;
   text-align: center;
+  padding: 0 1em;
+}
+@media (min-width: 550px) {
+  #mc_embed_signup {
+    font-size: 1.2em;
+  }
 }
 #mc_embed_signup label {
   font-size: 1.8em;
@@ -831,11 +852,30 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 
 .title-container-mobile.home-title {
   background-image: url(../images/frontpage-tablet-pt-br.jpg);
-  height: 924px;
+  height: auto;
+  background-size: 550px;
+  background-repeat: no-repeat;
+  background-position-y: top;
+}
+
+.title-container-mobile.home-title .home-featured {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+@media (min-width: 550px) {
+  .title-container-mobile.home-title {
+    height: 924px;
+    background-size: 1024px;
+  }
 }
 
 .title-container.home-title.en {
   background-image: url(../images/frontpage-desktop-en.jpg);
+}
+.title-container-mobile.home-title.en {
+  background-image: url(../images/frontpage-tablet-en.jpg);
 }
 
 @media (min-width: 1024px) {
