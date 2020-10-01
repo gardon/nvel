@@ -905,3 +905,9 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
   background-color: #000E;
 color: #FFF;
 }
+
+.blockquote {
+  font-family: komikula;
+  font-size: 2em;
+  margin-bottom: 2.5em;
+}
