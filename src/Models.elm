@@ -43,6 +43,7 @@ type alias Chapter =
     , path : String
     , audios : Maybe Audio
     , language_paths : Dict String String
+    , updated : Time.Posix
     }
 
 

@@ -107,11 +107,17 @@ viewChapterFeatured lang caption_phrase featured_class chapter =
 
         caption =
             translate lang caption_phrase
+
+        date =
+          if Time.posixToMillis chapter.date < Time.posixToMillis chapter.updated then
+            chapter.updated
+          else
+            chapter.date
     in
     div ( [ class ("chapter-featured " ++ featured_class), style "background-image" ("url(" ++ chapter.featured_image.uri ++ ");") ] ++ skeletonGridSize SixColumns )
         [ a [ href chapterPath ]
             [ h2 [] [ text caption ]
-            , h3 [] [ span [] [ text chapterNumber ], text chapter.title, small [] [ text (viewFeaturedDate lang chapter.date) ] ]
+            , h3 [] [ span [] [ text chapterNumber ], text chapter.title, small [] [ text (viewFeaturedDate lang date) ] ]
             ]
         ]
 

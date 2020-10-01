@@ -10,6 +10,7 @@ import Resources exposing (sectionDecoder, imageDecoder, dateDecoder)
 import Language
 import Audio exposing (decodeChapterAudio)
 import Chapters.Chapter exposing (sectionId)
+import Time
 
 
 -- Http
@@ -59,6 +60,7 @@ chapterDecoder =
         |> required "path" Decode.string
         |> optional "audios" decodeChapterAudio Nothing
         |> optional "language_paths" (Decode.dict Decode.string) Dict.empty
+        |> optional "updated_date" dateDecoder (Time.millisToPosix 0)
 
 
 decodeChapters : Decode.Decoder (Dict String Chapter)
