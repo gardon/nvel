@@ -117,11 +117,14 @@ type Environment
 type alias ChapterId =
     String
 
+type alias Target =
+  Maybe String
+
 
 type Route
     = HomeRoute
     | ChaptersRoute
-    | ChapterRoute ChapterId
+    | ChapterRoute ChapterId Target
     | AboutRoute
     | NotFoundRoute
 

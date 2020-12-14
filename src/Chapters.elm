@@ -9,7 +9,7 @@ import Msgs exposing (Msg(..))
 import Resources exposing (sectionDecoder, imageDecoder, dateDecoder)
 import Language
 import Audio exposing (decodeChapterAudio)
-import Chapters.Chapter exposing (sectionId)
+import Chapters.View exposing (sectionId)
 import Time
 
 

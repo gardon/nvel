@@ -5,7 +5,7 @@ import Dict
 import Html exposing (Html, text)
 import Models exposing (MaybeAsset(..), Model, Route(..), Language(..))
 import Msgs exposing (Msg)
-import Url.Parser exposing (Parser, oneOf, map, top, s, string, (</>), parse)
+import Url.Parser exposing (Parser, oneOf, map, top, s, string, (</>), parse, fragment)
 import Url exposing (Url)
 import View exposing (templateChapter, templateHome, templatePages, viewAbout, viewChapterList, viewHome)
 import Language exposing (removeLanguage)
@@ -16,7 +16,7 @@ matchers =
     oneOf
         [ map HomeRoute     top
         , map ChaptersRoute (s "chapters" </> top)
-        , map ChapterRoute  (s "chapters" </> string)
+        , map ChapterRoute  (s "chapters" </> string </> fragment identity)
         , map ChaptersRoute (s "chapters")
         , map AboutRoute    (s "about")
         ]
@@ -51,7 +51,7 @@ routeContent model =
             in
             templatePages model content
 
-        ChapterRoute id ->
+        ChapterRoute id fragment ->
             let
                 maybeChapter =
                     case model.chapters of

@@ -71,7 +71,7 @@ pageData model =
                 ChaptersRoute ->
                     chaptersListData model.language
 
-                ChapterRoute id ->
+                ChapterRoute id _ ->
                     chapterData model id
 
                 AboutRoute ->

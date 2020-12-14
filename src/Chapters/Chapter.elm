@@ -1,4 +1,4 @@
-module Chapters.Chapter exposing (replaceChapter, view, viewChapter, viewChapterContent, viewSection, sectionId)
+module Chapters.Chapter exposing (replaceChapter, view, viewChapter, viewChapterContent, viewSection)
 
 import Dict
 import Html exposing (Html, div, h1, h2, h3, text)
@@ -13,6 +13,7 @@ import View exposing (loading, viewImage, markdownOptions)
 import View.Attributes exposing (onClickZoom, sizes)
 import Language exposing (translate, translateMonth)
 import Time
+import Chapters.View exposing (sectionId)
 
 
 view : Language -> MaybeAsset Chapter -> Html Msg
@@ -161,7 +162,3 @@ viewSectionFull model =
 
         AudioSection _ _ ->
           (section_id, skeletonRow [ class "section-audio", id section_id ] [])
-
-sectionId : String -> Int -> String
-sectionId chapter section =
-    "section:" ++ chapter ++ ":" ++ String.fromInt section

@@ -45,6 +45,7 @@ import Svg.Attributes exposing (d, viewBox, xmlSpace)
 import View.Attributes exposing (srcset)
 import View.Mailchimp exposing (mailchimpBlock)
 import Audio exposing (audioIconOn, audioIconOff)
+import Chapters.View exposing (sectionId)
 
 viewHome : Model -> List (Html Msg)
 viewHome model =
@@ -98,8 +99,15 @@ sortChapterList chapters =
 viewChapterFeatured : Language -> Phrase -> String -> Chapter -> Html Msg
 viewChapterFeatured lang caption_phrase featured_class chapter =
     let
+        latest_section = case chapter.content
+          |> List.filter (\section -> not section.preview)
+          |> List.reverse
+          |> List.head of
+            Just section -> "#" ++ sectionId section.chapter section.id
+            Nothing -> ""
+
         chapterPath =
-            "/chapters/" ++ chapter.path
+            "/chapters/" ++ chapter.path ++ latest_section
             |> localizePath lang
 
         chapterNumber =
@@ -107,6 +115,8 @@ viewChapterFeatured lang caption_phrase featured_class chapter =
 
         caption =
             translate lang caption_phrase
+
+
 
         date =
           if Time.posixToMillis chapter.date < Time.posixToMillis chapter.updated then

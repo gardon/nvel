@@ -5,7 +5,8 @@
 port module App exposing (init, lazyImage, lazyLoad, main, navBar, pageChange, renderSocialMedia, subscriptions, toggleNavbar, update, updatePageData, view)
 
 import Chapters exposing (..)
-import Chapters.Chapter exposing (sectionId)
+import Chapters.View exposing (sectionId)
+import Chapters.Chapter
 import Config exposing (..)
 import Debug exposing (..)
 import Html exposing (..)
@@ -83,7 +84,7 @@ update msg model =
                 updatedModel =
                     { newmodel | pageData = pageData newmodel }
             in
-            ( updatedModel, updatePageData updatedModel.pageData )
+            ( updatedModel, Cmd.batch [ updatePageData updatedModel.pageData, scrollToTarget model ] )
 
         ChaptersLoad (Err _) ->
             ( model, pageChange () )
@@ -146,6 +147,7 @@ update msg model =
                 , Cmd.batch
                     [ cmd
                     , pageChange ()
+                    , scrollToTarget newmodel
                     ]
                 )
 
@@ -223,5 +225,18 @@ lazyImage record =
 scrollZoomedImage : Result a b -> Msg
 scrollZoomedImage result =
     NoOp
+
+scrollToTarget : Model -> Cmd Msg
+scrollToTarget model =
+  case model.route of
+    ChapterRoute _ frag ->
+      case frag of
+        -- attempt to scroll to fragment without reporting on failures.
+        Just target -> Task.attempt (\_ -> NoOp)
+          (Dom.getElement target
+            |> Task.andThen (\info -> Dom.setViewport 0 info.element.y)
+          )
+        Nothing -> Cmd.none
+    _ -> Cmd.none
 
 -- HTTP
