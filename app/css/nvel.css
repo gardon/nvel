@@ -901,7 +901,8 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
   text-align: center;
 }
 
-.inverted {
+.inverted,
+.inverted input {
   background-color: #000E;
 color: #FFF;
 }
