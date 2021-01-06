@@ -23,7 +23,6 @@
         window.addEventListener('scroll', function () {
           var scroll = window.pageYOffset || document.body.scrollTop;
           var play = document.getElementById(audios[i].start).offsetTop <= scroll + (window.innerHeight / 2) && document.getElementById(audios[i].start).offsetTop > scroll;
-          this.console.log(play);
           if (play) {
             if (!sounds[i].playing()) {
               window.SoundManager(i, audios[i].crossfade);
