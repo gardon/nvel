@@ -44,6 +44,7 @@ type alias Chapter =
     , audios : Maybe Audio
     , language_paths : Dict String String
     , updated : Time.Posix
+    , disqus_id : String
     }
 
 
@@ -93,6 +94,7 @@ type alias SiteInformation =
     , instagram_handle : String
     , deviantart_profile : String
     , aboutContent : String
+    , disqusDomain : String
     , preface : String
     }
 
@@ -101,6 +103,7 @@ type alias PageData =
     { title : String
     , lang : String
     , audios : List Audio
+    , disqus : { domain : String, id : String }
     }
 
 type alias Audio =

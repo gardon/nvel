@@ -209,4 +209,5 @@ decodeSiteInformation =
         |> optional "instagram_handle" Decode.string ""
         |> optional "deviantart_profile" Decode.string ""
         |> optional "about" Decode.string "# About"
+        |> optional "disqus_domain" Decode.string ""
         |> optional "preface" Decode.string "&nbsp;"

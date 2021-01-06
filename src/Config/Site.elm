@@ -16,6 +16,7 @@ siteInformation =
     , instagram_handle = ""
     , deviantart_profile = ""
     , aboutContent = ""
+    , disqusDomain = ""
     , preface = ""
     }
 
@@ -25,6 +26,7 @@ homeData lang =
     { title = ""
     , lang = Language.toString lang
     , audios = []
+    , disqus = { domain = "", id = ""}
     }
 
 
@@ -33,6 +35,7 @@ chaptersListData lang =
     { title = translate language MenuArchive
     , lang = Language.toString lang
     , audios = []
+    , disqus = { domain = "", id = ""}
     }
 
 
@@ -41,6 +44,7 @@ aboutData lang =
     { title = translate language MenuAbout
     , lang = Language.toString lang
     , audios = []
+    , disqus = { domain = "", id = ""}
     }
 
 
@@ -49,6 +53,7 @@ notFoundData lang =
     { title = "Oops, there was a problem!"
     , lang = Language.toString lang
     , audios = []
+    , disqus = { domain = "", id = ""}
     }
 
 

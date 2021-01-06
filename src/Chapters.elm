@@ -61,6 +61,7 @@ chapterDecoder =
         |> optional "audios" decodeChapterAudio Nothing
         |> optional "language_paths" (Decode.dict Decode.string) Dict.empty
         |> optional "updated_date" dateDecoder (Time.millisToPosix 0)
+        |> optional "disqus_id" Decode.string ""
 
 
 decodeChapters : Decode.Decoder (Dict String Chapter)

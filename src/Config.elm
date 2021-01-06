@@ -46,17 +46,18 @@ chapterData model id =
         maybeChapter =
             getChapterFromId model.chapters id
 
-        (title, audios) =
+        (title, audios, disqus_id) =
             case maybeChapter of
                 Nothing ->
-                    (translate model.language NotFound, [])
+                    (translate model.language NotFound, [], "")
 
                 Just chapter ->
-                    (chapter.title, chapterAudios chapter)
+                    (chapter.title, chapterAudios chapter, chapter.disqus_id)
     in
     { title = title
     , lang = Language.toString model.language
     , audios = audios
+    , disqus = { domain = model.siteInformation.disqusDomain, id = disqus_id }
     }
 
 

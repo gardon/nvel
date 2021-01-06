@@ -32,7 +32,7 @@ module View exposing
 import Time
 import Dict exposing (Dict)
 import Html exposing (Html, div, a, h1, h2, h3, text, span, small, Attribute, img, nav, ul, li, button)
-import Html.Attributes exposing (class, style, href, src, target, width, height, alt, title, hreflang)
+import Html.Attributes exposing (id, class, style, href, src, target, width, height, alt, title, hreflang)
 import Html.Events exposing (onClick)
 import Image exposing (Image)
 import Language exposing (translate, translateMonth, localizePath, removeLanguage)
@@ -597,6 +597,7 @@ templateChapter model chapter content =
     ]
         ++ content
         ++ [ nextchapter
+           , div [ class "container comments" ] [ div [ id "disqus_thread" ] []]
            , div [ class "container footer-container" ]
                 [ viewSocialLinks model
                 ]

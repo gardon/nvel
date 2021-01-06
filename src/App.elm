@@ -59,7 +59,7 @@ init flags location key =
             Config.getLanguages
 
         pageData =
-            { title = translate lang Loading, lang = Language.toString lang, audios = [] }
+            { title = translate lang Loading, lang = Language.toString lang, audios = [], disqus = { domain = "", id = ""} }
 
         menu =
             Menu.menu
