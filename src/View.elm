@@ -96,18 +96,12 @@ sortChapterList chapters =
     List.sortBy .index (Dict.values chapters)
 
 
-viewChapterFeatured : Language -> Phrase -> String -> Chapter -> Html Msg
-viewChapterFeatured lang caption_phrase featured_class chapter =
+viewChapterFeatured : Language -> Phrase -> String -> Chapter -> String -> Html Msg
+viewChapterFeatured lang caption_phrase featured_class chapter section =
     let
-        latest_section = case chapter.content
-          |> List.filter (\section -> not section.preview)
-          |> List.reverse
-          |> List.head of
-            Just section -> "#" ++ sectionId section.chapter section.id
-            Nothing -> ""
 
         chapterPath =
-            "/chapters/" ++ chapter.path ++ latest_section
+            "/chapters/" ++ chapter.path ++ section
             |> localizePath lang
 
         chapterNumber =
@@ -150,13 +144,18 @@ viewFeaturedDate lang time =
 
 viewChapterFeaturedCurrent : Language -> Chapter -> Html Msg
 viewChapterFeaturedCurrent lang chapter =
-    viewChapterFeatured lang CurrentChapter "current-chapter" chapter
+  viewChapterFeatured lang CurrentChapter "current-chapter" chapter <| case chapter.content
+    |> List.filter (\section -> not section.preview)
+    |> List.reverse
+    |> List.head of
+        Just section -> "#" ++ sectionId section.chapter section.id
+        Nothing -> ""
 
 
 
 viewChapterFeaturedNext : Language -> Chapter -> Html Msg
 viewChapterFeaturedNext lang chapter =
-    viewChapterFeatured lang NextChapter "next-chapter offset-by-three" chapter
+    viewChapterFeatured lang NextChapter "next-chapter offset-by-three" chapter ""
 
 
 linkButtonPrimary : String -> String -> Html Msg
