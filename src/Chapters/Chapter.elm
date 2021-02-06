@@ -155,7 +155,7 @@ viewSectionFull model =
             )
 
         Text text ->
-            (section_id, skeletonRow [ class "section-text" ]
+            (section_id, skeletonRow [ class "section-text", id section_id ]
                 [ Markdown.toHtmlWith markdownOptions [ class "text-content" ] text
                 ]
             )
