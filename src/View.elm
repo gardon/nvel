@@ -37,7 +37,7 @@ import Html.Events exposing (onClick)
 import Image exposing (Image)
 import Language exposing (translate, translateMonth, localizePath, removeLanguage)
 import Markdown
-import Models exposing (Model, Phrase(..), Chapter, Language, MenuItem, SocialIconType(..), MaybeAsset(..))
+import Models exposing (Model, Phrase(..), Chapter, Language, MenuItem, SocialIconType(..), MaybeAsset(..), Section)
 import Msgs exposing (Msg(..))
 import Skeleton exposing (skeletonRow, skeletonRowFullWidth, skeletonGridSize, GridSize(..), skeletonColumn)
 import Svg exposing (path, svg)
@@ -146,12 +146,24 @@ viewChapterFeaturedCurrent : Language -> Chapter -> Html Msg
 viewChapterFeaturedCurrent lang chapter =
   viewChapterFeatured lang CurrentChapter "current-chapter" chapter <| case chapter.content
     |> List.filter (\section -> not section.preview)
-    |> List.reverse
-    |> List.head of
+    |> latestUpdate of
         Just section -> "#" ++ sectionId section.chapter section.id
         Nothing -> ""
 
-
+latestUpdate : List Section -> Maybe Section
+latestUpdate sections =
+  case sections of
+    [] -> Nothing
+    [only] -> Just only
+    [first, last] ->
+      if first.date == last.date then
+        Just first
+      else
+        Just last
+    first :: rest ->
+      case latestUpdate rest of
+        Nothing -> Just first
+        Just last -> latestUpdate [first, last]
 
 viewChapterFeaturedNext : Language -> Chapter -> Html Msg
 viewChapterFeaturedNext lang chapter =
