@@ -500,7 +500,6 @@ templateHome : Model -> List (Html Msg) -> List (Html Msg)
 templateHome model content =
   [ viewNavbar [ class "home" ] model
   , viewTitleContainer model "title-container"
-  , viewTitleContainer model "title-container-mobile"
   ]
     ++ content
     ++ [ div [ class "container footer-container" ]
@@ -520,7 +519,7 @@ viewTitleContainer model class_ =
     [ viewTitle model
     , case list of
         current :: _ ->
-          skeletonRow [ class "home-featured" ] [ viewChapterFeaturedCurrent model.language current ]
+          div [ class "home-featured", class "row" ] [ viewChapterFeaturedCurrent model.language current ]
         [] ->
           skeletonRow [] []
     ]

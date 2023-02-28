@@ -6,6 +6,8 @@
     font-style: normal;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Chilanka&display=swap');
+
 img.u-full-width {
 	height: auto;
 	max-width: 1200px;
@@ -81,12 +83,12 @@ span.loading-icon {
 @media (min-width: 550px) {
   .navbar-container {
     font-size: 1.3em;
-    background-color: transparent;
+    /*background-color: transparent;*/
   }
-  .navbar-container.home {
+  /* .navbar-container.home {
     position: absolute;
     padding-top: 1em;
-  }
+  } */
 }
 
 .navbar-container .container {
@@ -326,32 +328,24 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 }
 
 .home-featured .chapter-featured {
-  font-size: 0.7em;
-  margin-top: 496px;
+  font-size: 0.5em;
   border-radius: 0;
-  background-color: #000;
+  background-color: transparent;
+  width: 100%;
+  padding: 9em 42px;
 }
 
-@media (min-width: 550px) {
-.home-featured .chapter-featured {
-  top: 746px;
-  left: 30em;
-  margin-top: 0;
-    border-radius: 65% 63% 65% 43% / 82% 81% 89% 77% ;
-
-}
-}
-@media (min-width: 1024px) {
+@media (min-width: 722px) {
   .home-featured .chapter-featured {
-    top: 494px;
-    left: -1em;
+    font-size: 0.8em;
+    padding: 10em 42px;
   }
 }
+
 @media (min-width: 1366px) {
   .home-featured .chapter-featured {
-    top: 663px;
-    left: -6em;
     font-size: 1em;
+    padding: 10em 42px;
   }
 }
 
@@ -408,6 +402,28 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 	text-shadow: 0 0 2px #000;
 	font-size: 2.4em;
   margin: 0;
+}
+.home-featured .chapter-featured a:hover h2,
+.home-featured .chapter-featured a:hover h3,
+.home-featured .chapter-featured a:hover h3 small {
+  color: #1c3f7f;
+}
+.home-featured .chapter-featured  h2 {
+  color: #6c3351;
+  font-family: 'Chilanka', cursive;
+  text-shadow: none;
+  font-size: 3em;
+  font-weight: bold;
+}
+.home-featured .chapter-featured  h3 {
+  font-family: 'Chilanka', cursive;
+  color: #6c3351;
+  text-transform: uppercase;
+  font-size: 3em;
+}
+.home-featured .chapter-featured  h3 small {
+  color: #957486;
+  font-weight: bold;
 }
 
 .chapter-featured .image-overlay h2 span {
@@ -814,81 +830,56 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 	margin-bottom: 1rem;
 }
 
-/**.chapter-navigation ul.previous li:last-child .chapter-title,
-.chapter-navigation ul.next li:first-child .chapter-title {
-	display: inline;
-}**/
-
-.title-container.home-title,
-.title-container-mobile.home-title {
+.title-container.home-title {
   margin: 0;
   top: 0;
   z-index: -1;
   background-position: center;
   overflow: hidden;
   width: 100%;
-  box-shadow: 0 -5px 26px black;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
-.title-container.home-title h1.site-title,
-.title-container-mobile.home-title h1.site-title {
+.title-container.home-title h1.site-title {
   display: none;
 }
 
 
 .title-container.home-title {
-  display: none;
   background-image: url(../images/frontpage-desktop-pt-br.jpg);
-  background-size: 1500px;
-  height: 844px;
+  background-repeat: no-repeat;
+  height: 760px;
+  background-size: 550px;
+  background-position-y: top;
+}
+
+.title-container.home-title .home-featured {
+  padding: 0;
+  width: 100%;
+  background-image: linear-gradient(rgba(255,255,255,0),rgb(255, 255, 255) 75%);
+}
+
+@media (min-width: 722px) {
+  .title-container.home-title {
+    height: 1417px;
+    background-size: 1024px;
+  }
 }
 
 @media (min-width: 1366px) {
   .title-container.home-title {
-    background-size: 1920px;
-    height: 1080px;
-  }
-}
-
-.title-container-mobile.home-title {
-  background-image: url(../images/frontpage-tablet-pt-br.jpg);
-  height: auto;
-  background-size: 550px;
-  background-repeat: no-repeat;
-  background-position-y: top;
-}
-
-.title-container-mobile.home-title .home-featured {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-}
-
-@media (min-width: 550px) {
-  .title-container-mobile.home-title {
-    height: 924px;
-    background-size: 1024px;
+    background-size: 1305px;
+    height: 1804px;
   }
 }
 
 .title-container.home-title.en {
   background-image: url(../images/frontpage-desktop-en.jpg);
 }
-.title-container-mobile.home-title.en {
-  background-image: url(../images/frontpage-tablet-en.jpg);
-}
-
-@media (min-width: 1024px) {
-  .title-container-mobile.home-title {
-    display: none;
-  }
-  .title-container.home-title {
-    display: block;
-  }
-}
 
 .preface-container {
-  padding-top: 25vh;
+  padding-top: 15vh;
   padding-bottom: 25vh;
 }
 
