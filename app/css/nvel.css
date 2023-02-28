@@ -847,7 +847,7 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 
 
 .title-container.home-title {
-  background-image: url(../images/frontpage-desktop-pt-br.jpg);
+  background-image: url(../images/frontpage-desktop-pt-br.jpg?v2);
   background-repeat: no-repeat;
   height: 760px;
   background-size: 550px;
@@ -875,7 +875,7 @@ h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.08rem; }
 }
 
 .title-container.home-title.en {
-  background-image: url(../images/frontpage-desktop-en.jpg);
+  background-image: url(../images/frontpage-desktop-en.jpg?v2);
 }
 
 .preface-container {
