@@ -155,15 +155,13 @@ latestUpdate sections =
   case sections of
     [] -> Nothing
     [only] -> Just only
-    [first, last] ->
-      if first.date == last.date then
-        Just first
-      else
-        Just last
     first :: rest ->
       case latestUpdate rest of
         Nothing -> Just first
-        Just last -> latestUpdate [first, last]
+        Just last -> if first.date == last.date then
+            Just first
+          else
+            Just last
 
 viewChapterFeaturedNext : Language -> Chapter -> Html Msg
 viewChapterFeaturedNext lang chapter =
