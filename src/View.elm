@@ -158,7 +158,7 @@ latestUpdate sections =
     first :: rest ->
       case latestUpdate rest of
         Nothing -> Just first
-        Just last -> if first.date == last.date then
+        Just last -> if first.date == last.date || (Time.posixToMillis first.date) > (Time.posixToMillis last.date) then
             Just first
           else
             Just last
